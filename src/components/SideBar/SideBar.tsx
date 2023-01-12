@@ -7,6 +7,7 @@ import SideItem from "./SideItems/SideItem";
 import { useSession, signIn, signOut } from "next-auth/react";
 import SearchIcon from "@mui/icons-material/Search";
 import EventIcon from '@mui/icons-material/Event';
+import Link from "next/link";
 
 const SideBar = () => {
   const [show, setShow] = useState(false);
@@ -55,11 +56,11 @@ const LoginButton = () => {
   return (
     <>
       {session ? (
-        <a href="/profile" className={style.sideitem} >
+        <Link href="/profile" className={style.sideitem} >
           {session?.user?.image? <img src={session.user.image} className={style.avatar} /> : <AccountCircleIcon className={style.icon}/>}
           
           {session?.user?.name}
-          </a>
+          </Link>
       ) : (
         <SideItem
           Icon={AccountCircleIcon}
