@@ -21,6 +21,7 @@ const Profile: NextPage = () => {
       email: email,
     });
     console.log(axiosUser);
+    setEdit(false);
   };
 
   const onNameChange = (a: any) => {

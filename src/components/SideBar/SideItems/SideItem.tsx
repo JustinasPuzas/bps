@@ -8,10 +8,11 @@ interface Props {
   Name?: string;
   link: string;
   close?: boolean;
+  onClick?: () => void;
 }
 
 
-function SideItem({ Icon , Name, link , close  }: Props) {
+function SideItem({ Icon , Name, link , close, onClick  }: Props) {
   const router = useRouter()
 
   const buttonHandler = () => {
@@ -26,7 +27,7 @@ function SideItem({ Icon , Name, link , close  }: Props) {
 
   return (
     <>
-        <Link href={link} style={buttonHandler()} className={close ? `${style.close} ${style.sideitem}` : style.sideitem}>
+        <Link href={link} onClick={onClick} style={buttonHandler()} className={close ? `${style.close} ${style.sideitem}` : style.sideitem}>
           <Icon className={style.icon} />
           <span>{Name}</span>
         </Link>

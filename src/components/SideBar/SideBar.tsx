@@ -6,8 +6,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SideItem from "./SideItems/SideItem";
 import { useSession, signIn, signOut } from "next-auth/react";
 import SearchIcon from "@mui/icons-material/Search";
-import EventIcon from '@mui/icons-material/Event';
+import EventIcon from "@mui/icons-material/Event";
 import Link from "next/link";
+import { env } from "../../env/server.mjs";
 
 const SideBar = () => {
   const [show, setShow] = useState(false);
@@ -37,7 +38,9 @@ const SideBar = () => {
               Name="My Tickets"
               link="/myTickets"
             />
-            {session?.user?.admin ? <SideItem Icon={EventIcon} Name="Events" link="/manageEvents" /> : null}
+            {session?.user?.admin ? (
+              <SideItem Icon={EventIcon} Name="Events" link="/manageEvents" />
+            ) : null}
             <LoginButton />
           </div>
         </div>
@@ -56,16 +59,21 @@ const LoginButton = () => {
   return (
     <>
       {session ? (
-        <Link href="/profile" className={style.sideitem} >
-          {session?.user?.image? <img src={session.user.image} className={style.avatar} /> : <AccountCircleIcon className={style.icon}/>}
-          
+        <Link href="/profile" className={style.sideitem}>
+          {session?.user?.image ? (
+            <img src={session.user.image} className={style.avatar} />
+          ) : (
+            <AccountCircleIcon className={style.icon} />
+          )}
+
           {session?.user?.name}
-          </Link>
+        </Link>
       ) : (
         <SideItem
           Icon={AccountCircleIcon}
           Name="Sign In"
-          link={"http://localhost:3000/api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F"}
+          onClick={() => signIn()}
+          link={""}
         />
       )}
     </>
