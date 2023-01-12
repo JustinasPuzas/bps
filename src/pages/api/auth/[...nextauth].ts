@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       session.user.id = user.id as string;
       session.user.admin = userDb.admin as boolean;
       // session.user.tickets = userDb.tickets
-      return Promise.resolve(session);;
+      return Promise.resolve(session);
     },
   },
   
