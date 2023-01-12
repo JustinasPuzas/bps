@@ -1,4 +1,4 @@
-import style from "../../styles/SideBar.module.css";
+import style from "../../styles/Sidebar.module.css";
 import { useState } from "react";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
