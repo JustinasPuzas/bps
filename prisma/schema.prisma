@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "mongodb"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -15,16 +15,16 @@ datasource db {
 }
 
 model Example {
-    id        String   @id @default(cuid())
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
+    id                String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId            String  @db.ObjectId
+    type              String 
     provider          String
     providerAccountId String
     refresh_token     String? // @db.Text
@@ -39,25 +39,55 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+model Event {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    date      DateTime?
+    location  String?  @default("Null")
+    image     String?  @default("https://www.google.com/url?sa=i&url=https%3A%2F%2Fblog.berlin.bard.edu%2Ftheater-kid-part-1%2F&psig=AOvVaw1PsJd8UM1R7_JzbPMZS6Lb&ust=1673578048156000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjgz5qCwfwCFQAAAAAdAAAAABAE")
+    hostedBy  String
+    description String? @default("")
+    public    Boolean @default(false)
+    Tickets   Ticket[]
+}
+
+model Ticket {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    price     Int
+    event     Event    @relation(fields: [eventId], references: [id])
+    eventId   String   @db.ObjectId
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String   @db.ObjectId
+}
+
 model Session {
-    id           String   @id @default(cuid())
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
     sessionToken String   @unique
-    userId       String
+    userId       String   @db.ObjectId
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String    @id @default(auto()) @map("_id") @db.ObjectId
     name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    password      String?
+    admin         Boolean   @default(false)
+    tickets       Ticket[] 
     accounts      Account[]
     sessions      Session[]
 }
 
 model VerificationToken {
+    id         String @id @default(auto()) @map("_id") @db.ObjectId
     identifier String
     token      String   @unique
     expires    DateTime
