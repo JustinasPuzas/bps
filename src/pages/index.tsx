@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from '@mui/material/Button';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -31,10 +34,36 @@ const Home: NextPage = () => {
 };
 
 const MainPage = () => {
+  const [name, setName] = useState("");
+  const [price1, setPrice1] = useState(0);
+  const [price2, setPrice2] = useState(1000000);
+
   const [eventList, setEventList] = useState([]);
 
+  const handleOnSearch = async () => {
+    const axiosUser = await axios.post("/api/event/filter",
+      {
+        search: name,
+        price1: price1,
+        price2: price2,
+      }
+    );
+    setEventList(axiosUser.data);
+  };
+
+  const handleOnNameChange = (event: any) => {
+    setName(event.target.value);
+  };
+
+  const handleOnPrice1Change = (event: any) => {
+    setPrice1(event.target.value);
+  };
+
+  const handleOnPrice2Change = (event: any) => {
+    setPrice2(event.target.value);
+  };
+
   useEffect(() => {
-    
     const getEventList = async () => {
       const axiosUser = await axios.get("/api/event");
       setEventList(axiosUser.data);
@@ -44,10 +73,15 @@ const MainPage = () => {
 
   return (
     <div className={styles.mainPage}>
-      <div className={styles.searchBar}></div>
+      <div className={styles.searchBar}>
+        <TextField onChange={handleOnNameChange} id="outlined-basic" label="Search" variant="outlined" />
+        <TextField onChange={handleOnPrice1Change} id="standard-basic" label="from:" type="number" variant="standard" />
+        <TextField onChange={handleOnPrice2Change} id="standard-basic" label="to:" type="number" variant="standard" />
+        <Button onClick={handleOnSearch} variant="outlined" endIcon={<SearchIcon />} >Search</Button>
+      </div>
       <div className={styles.list}>
         {eventList.map((event: any) => {
-          console.log(event)
+          console.log(event);
           return (
             <EventCard
               key={event.id}
@@ -64,24 +98,51 @@ const MainPage = () => {
 };
 
 const DiscoverBar = () => {
+  const [events, setEvents] = useState([] as any[]);
+
+  useEffect(() => {
+    const getEventList = async () => {
+      const axiosEvents = await axios.get("/api/event");
+      setEvents([axiosEvents.data[0] as any[], axiosEvents.data[axiosEvents.data.length - 1] as any]);
+    };
+    getEventList();
+  }, []);
+
+
+
   return (
     <div className={styles.discoverBar}>
       <h2>Discover</h2>
-      <DiscoverCard />
-      <DiscoverCard />
+      {events.map((event: any) => {
+        return (
+          <DiscoverCard
+            key={event.id}
+            image={event.image}
+            name={event.name}
+            price={event.price}
+          />
+        );
+      })
+      }
     </div>
   );
 };
 
 interface EventCardProps {
-  key: string,
+  key: string;
   image: string;
   name: string;
   price: number;
   description: string;
 }
 
-const EventCard = ({ image, name, price, description, key }: EventCardProps) => {
+const EventCard = ({
+  image,
+  name,
+  price,
+  description,
+  key,
+}: EventCardProps) => {
   return (
     <div key={key} className={styles.eventCard}>
       <img src={image}></img>
@@ -92,12 +153,18 @@ const EventCard = ({ image, name, price, description, key }: EventCardProps) => 
   );
 };
 
-const DiscoverCard = () => {
+interface DiscoverCardProps {
+  key: string;
+  image: string;
+  name: string;
+  price: number;
+}
+
+const DiscoverCard = ({key, image, name, price}: DiscoverCardProps) => {
   return (
-    <div>
-      <h2>Eventas</h2>
-      <p>Dar Labiaugeras</p>
-      <p>Labai geras</p>
+    <div className={styles.discoverCard} style={{"backgroundImage": `url(${image})`}}>
+      <h2>{name}</h2>
+      <p>{price}</p>
     </div>
   );
 };

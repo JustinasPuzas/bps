@@ -32,12 +32,7 @@ const SideBar = () => {
           <div className={style.box_one}>
             <span className={style.heading}>Menu</span>
             <SideItem Icon={TheaterComedyIcon} Name="Home" link="/" />
-            <SideItem Icon={SearchIcon} Name="Search" link="/search" />
-            <SideItem
-              Icon={ConfirmationNumberIcon}
-              Name="My Tickets"
-              link="/myTickets"
-            />
+
             {session?.user?.admin ? (
               <SideItem Icon={EventIcon} Name="Events" link="/manageEvents" />
             ) : null}

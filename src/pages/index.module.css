@@ -71,7 +71,17 @@
 
 .mainPage {
   width: 100%;
+}
 
+.searchBar{
+  margin-top:40px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  width: 60vw;
+  height: 80px;
+  gap: 10px
 }
 
 .discoverBar{
@@ -79,7 +89,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 1rem;
+  padding: 0;
   gap: 1rem;
   background-color: #2a2a2a;
   color: white;
@@ -111,6 +121,11 @@
 .eventCard p {
   margin: 0;
   text-overflow:ellipsis;
+}
+
+.discoverCard {
+
+  width: 100%;
 }
 
 @media (max-width: 600px) {
