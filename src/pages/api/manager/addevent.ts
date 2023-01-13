@@ -5,20 +5,44 @@ import { unstable_getServerSession } from "next-auth/next";
 
 const handler: RequestHandler = async (req: any, res: any) => {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (req.method !== "PUT") return res.status(405).end();
+  if (req.method !== "POST") return res.status(405).end();
   if (!session) return res.status(401).end();
   if (!session.user?.admin) return res.status(403).end();
 
-  if (!req.body.name) return res.status(400).json({error: "Event must have a name"}).end();
+  if (!req.body.name)
+    return res.status(400).json({ error: "Event must have a Name" }).end();
+  if (!req.body.hostedBy)
+    return res
+      .status(400)
+      .json({ error: "Event must have Contact Email" })
+      .end();
+  if (!req.body.description)
+    return res
+      .status(400)
+      .json({ error: "Event must have a Description" })
+      .end();
+  if (!req.body.price)
+    return res.status(400).json({ error: "Event must have a Price" }).end();
 
-    const event = await prisma.event.create({
-        data: {
-            name: `${req.body.name}`,
-            hostedBy: `${session.user.name}`
-            
-        }
-    })
 
+  const event = await prisma.event.create({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      hostedBy: true,
+      image: true,
+      date: true,
+    },
+    data: {
+      name: `${req.body.name}`,
+      hostedBy: `${req.body.hostedBy}`,
+      description: `${req.body.description}`,
+      price: req.body.price,
+    },
+  });
+
+  return res.status(200).json(event);
 };
 
 export default handler;

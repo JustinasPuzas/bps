@@ -1,9 +1,66 @@
-import Button from "@mui/material/Button";
 import Head from "next/head";
 import styles from "./manageevents.module.css";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { eventNames } from "process";
 
 const manageEvents = () => {
+  const [open, setOpen] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [error, setError] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventEmail, setEventEmail] = useState("");
+
+  useEffect(() => {
+    const getEvents = async () => {
+      const axiosEvents = await axios.get("/api/event");
+      setEvents(axiosEvents.data);
+    };
+    getEvents();
+  }, [open]);
+
+  const onNameChange = (a: any) => {
+    setEventName(a.target.value);
+  };
+
+  const onDescriptionChange = (a: any) => {
+    setEventDescription(a.target.value);
+  };
+
+  const onEmailChange = (a: any) => {
+    setEventEmail(a.target.value);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAddEvent = async () => {
+    try {
+      const axiosEvent:any = await axios.post("/api/manager/addevent", {
+        name: eventName,
+        description: eventDescription,
+        hostedBy: eventEmail,
+      });
+      handleClose();
+    } catch (err) {
+      setError(err.response.data.error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -12,12 +69,69 @@ const manageEvents = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-            <div className={styles.cardRow}>
-                <div className={styles.cardMain}>
-                    <h3>Event Manager</h3>
-                    <Button startIcon={<AddIcon/>} variant="outlined">Add Event</Button>
-                </div>
+        <div className={styles.cardRow}>
+          <div className={styles.cardMain}>
+            <h3>Event Manager</h3>
+            <Button
+              onClick={handleClickOpen}
+              startIcon={<AddIcon />}
+              variant="outlined"
+            >
+              Add Event
+            </Button>
+          </div>
+          {events.map((event: any) => (
+            <div className={styles.card}>
+              <h3>{event.name}</h3>
+              <p>{event.description}</p>
+              <p>{event.hostedBy}</p>
             </div>
+          ))}
+        </div>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Add new Event</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To add an event, please enter the following information:
+              <h4 className={styles.error}>{`\n${error}`}</h4>
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={onNameChange}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="description"
+              label="Description"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={onDescriptionChange}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="email"
+              label="Contact Email"
+              type="email"
+              fullWidth
+              variant="standard"
+              onChange={onEmailChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleAddEvent}>Add</Button>
+          </DialogActions>
+        </Dialog>
       </main>
     </>
   );

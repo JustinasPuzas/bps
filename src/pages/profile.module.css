@@ -5,7 +5,7 @@
   justify-content: flex-start;
   padding-left: 5vw;
   min-height: 100vh;
-  background-image: linear-gradient(to bottom, #2e026d, #15162c);
+  background-image: linear-gradient(to bottom, #fff7e8, #ffd884);
   color: white;
   min-width: calc(100vw);
 }

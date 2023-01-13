@@ -3,11 +3,13 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
 
-  console.log(session)
+  console.log(session);
   return (
     <>
       <Head>
@@ -16,38 +18,85 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        <h1 className={styles.title}>
+          B<span className={styles.pinkSpan}>P</span>S
+        </h1>
         <div className={styles.container}>
-          <h1 className={styles.title}>
-            Create <span className={styles.pinkSpan}>T3</span> App
-          </h1>
-          {session ? <button onClick={() => signOut()}>Sign out</button> : <button onClick={() => signIn()}>Sign in</button>}
-          <div className={styles.cardRow}>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>First Steps →</h3>
-              <div className={styles.cardText}>
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>Documentation →</h3>
-              <div className={styles.cardText}>
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
+          <MainPage />
         </div>
       </main>
+      <DiscoverBar />
     </>
+  );
+};
+
+const MainPage = () => {
+  const [eventList, setEventList] = useState([]);
+
+  useEffect(() => {
+    
+    const getEventList = async () => {
+      const axiosUser = await axios.get("/api/event");
+      setEventList(axiosUser.data);
+    };
+    getEventList();
+  }, []);
+
+  return (
+    <div className={styles.mainPage}>
+      <div className={styles.searchBar}></div>
+      <div className={styles.list}>
+        {eventList.map((event: any) => {
+          console.log(event)
+          return (
+            <EventCard
+              image={event.image}
+              name={event.name}
+              price={event.price}
+              description={event.description}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const DiscoverBar = () => {
+  return (
+    <div className={styles.discoverBar}>
+      <h2>Discover</h2>
+      <DiscoverCard />
+      <DiscoverCard />
+    </div>
+  );
+};
+
+interface EventCardProps {
+  image: string;
+  name: string;
+  price: number;
+  description: string;
+}
+
+const EventCard = ({ image, name, price, description }: EventCardProps) => {
+  return (
+    <div className={styles.eventCard}>
+      <img src={image}></img>
+      <h3>{name}</h3>
+      <p>{description}</p>
+      <p>{price}</p>
+    </div>
+  );
+};
+
+const DiscoverCard = () => {
+  return (
+    <div>
+      <h2>Eventas</h2>
+      <p>Dar Labiaugeras</p>
+      <p>Labai geras</p>
+    </div>
   );
 };
 

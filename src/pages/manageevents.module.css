@@ -4,18 +4,24 @@
     align-items: flex-start;
     justify-content: flex-start;
     padding: 5vw;
-    min-height: 100vh;
-    background-image: linear-gradient(to bottom, #2e026d, #15162c);
+    height: 100vh;
+    background-image: linear-gradient(to bottom, #fff7e8, #ffd884);
     color: white;
     min-width: calc(100vw);
+    overflow-y:scroll
+  }
+
+  .error {
+    color: red;
   }
   
   .container {
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    align-items: space-between;
+    justify-content: space-between;
+    scroll-behavior: smooth;
     gap: 3rem;
     padding: 4rem 1rem;
   }

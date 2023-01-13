@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useSession, signIn, signOut } from "next-auth/react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Profile: NextPage = () => {
@@ -114,7 +114,7 @@ const Profile: NextPage = () => {
                     Cancel
                   </Button>
                   <Button
-                    variant="text"
+                    variant="outlined"
                     color="success"
                     disabled={!valid}
                     onClick={() => onSave()}
@@ -123,9 +123,14 @@ const Profile: NextPage = () => {
                   </Button>
                 </>
               ) : (
-                <Button variant="text" onClick={() => setEdit(true)}>
-                  Edit
-                </Button>
+                <>
+                  <Button variant="text" onClick={() => setEdit(true)}>
+                    Edit
+                  </Button>
+                  <Button variant="outlined" color="error" onClick={() => signOut()}>
+                    SignOut
+                  </Button>
+                </>
               )}
             </div>
           </div>
