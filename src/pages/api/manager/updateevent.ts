@@ -9,7 +9,7 @@ const handler: RequestHandler = async (req: any, res:any) => {
   if (!session) return res.status(401).end();
   if (!session.user?.admin) return res.status(403).end();
 
-  let data: any = {};
+  const data: any = {};
 
   if(!req.body.id){
     return res.status(400).json({error: "Event must have an ID"});
