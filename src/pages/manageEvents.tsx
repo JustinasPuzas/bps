@@ -56,7 +56,7 @@ const ManageEvents = () => {
         hostedBy: eventEmail,
       });
       handleClose();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
