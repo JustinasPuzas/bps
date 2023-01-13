@@ -17,6 +17,8 @@ const handler: RequestHandler = async (req: any, res: any) => {
         image: true,
         date: true,
         price: true,
+        public: true,
+        location: true,
       },
     });
 
@@ -32,6 +34,8 @@ const handler: RequestHandler = async (req: any, res: any) => {
       image: true,
       date: true,
       price: true,
+      public: true,
+      location: true,
     },
     where: {
       public: true,

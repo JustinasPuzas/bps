@@ -148,7 +148,7 @@ const EventCard = ({
       <img src={image}></img>
       <h3>{name}</h3>
       <p>{description}</p>
-      <p>{price}</p>
+      <p>{price} Eur</p>
     </div>
   );
 };
@@ -164,7 +164,7 @@ const DiscoverCard = ({key, image, name, price}: DiscoverCardProps) => {
   return (
     <div className={styles.discoverCard} style={{"backgroundImage": `url(${image})`}}>
       <h2>{name}</h2>
-      <p>{price}</p>
+      <p>{price} Eur</p>
     </div>
   );
 };

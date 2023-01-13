@@ -47,7 +47,7 @@ model Event {
     name      String
     date      DateTime?
     location  String?  @default("Null")
-    image     String?  @default("https://www.google.com/url?sa=i&url=https%3A%2F%2Fblog.berlin.bard.edu%2Ftheater-kid-part-1%2F&psig=AOvVaw1PsJd8UM1R7_JzbPMZS6Lb&ust=1673578048156000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjgz5qCwfwCFQAAAAAdAAAAABAE")
+    image     String?  @default("https://blog.berlin.bard.edu/wp-content/uploads/2014/04/Cover-photo-no-caption-needed.jpg")
     hostedBy  String
     description String? @default("")
     public    Boolean @default(false)

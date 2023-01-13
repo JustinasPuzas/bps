@@ -21,9 +21,9 @@ const handler: RequestHandler = async (req: any, res: any) => {
       .status(400)
       .json({ error: "Event must have a Description" })
       .end();
-  if (!req.body.price)
+  if (!Number.parseInt(req.body.price))
     return res.status(400).json({ error: "Event must have a Price" }).end();
-
+  req.body.price = Number.parseInt(req.body.price);
 
   const event = await prisma.event.create({
     select: {
