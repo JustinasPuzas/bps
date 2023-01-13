@@ -74,7 +74,7 @@ const DiscoverBar = () => {
 };
 
 interface EventCardProps {
-  id: String,
+  id: string,
   image: string;
   name: string;
   price: number;

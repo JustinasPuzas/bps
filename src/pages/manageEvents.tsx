@@ -137,4 +137,4 @@ const ManageEvents = () => {
   );
 };
 
-export default manageEvents;
+export default ManageEvents;
