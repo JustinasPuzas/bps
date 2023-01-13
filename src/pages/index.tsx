@@ -50,6 +50,7 @@ const MainPage = () => {
           console.log(event)
           return (
             <EventCard
+              id={event.id}
               image={event.image}
               name={event.name}
               price={event.price}
@@ -73,15 +74,16 @@ const DiscoverBar = () => {
 };
 
 interface EventCardProps {
+  id: String,
   image: string;
   name: string;
   price: number;
   description: string;
 }
 
-const EventCard = ({ image, name, price, description }: EventCardProps) => {
+const EventCard = ({ image, name, price, description, id }: EventCardProps) => {
   return (
-    <div className={styles.eventCard}>
+    <div key={id} className={styles.eventCard}>
       <img src={image}></img>
       <h3>{name}</h3>
       <p>{description}</p>

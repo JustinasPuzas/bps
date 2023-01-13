@@ -12,7 +12,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { eventNames } from "process";
 
-const manageEvents = () => {
+const ManageEvents = () => {
   const [open, setOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
@@ -81,7 +81,7 @@ const manageEvents = () => {
             </Button>
           </div>
           {events.map((event: any) => (
-            <div className={styles.card}>
+            <div key={event.id} className={styles.card}>
               <h3>{event.name}</h3>
               <p>{event.description}</p>
               <p>{event.hostedBy}</p>
