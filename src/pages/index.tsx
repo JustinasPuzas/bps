@@ -147,7 +147,7 @@ const EventCard = ({
     <div key={key} className={styles.eventCard}>
       <img src={image}></img>
       <h3>{name}</h3>
-      <p>{description}</p>
+      
       <p>{price} Eur</p>
     </div>
   );
