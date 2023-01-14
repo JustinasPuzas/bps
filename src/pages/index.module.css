@@ -66,22 +66,30 @@
 
 .list{
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .mainPage {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }
 
 .searchBar{
-  margin-top:40px;
+  background-color: rgba(255, 255, 255, 0.513);
+  padding: 10px;
+  margin-top:30px;
   margin-bottom: 40px;
   display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: space-around;
   width: 60vw;
   height: 80px;
-  gap: 10px
+  border-radius: 10px;
 }
 
 .discoverBar{
