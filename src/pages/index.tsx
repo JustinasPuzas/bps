@@ -37,6 +37,8 @@ const Home: NextPage = () => {
 const MainPage = () => {
   const [name, setName] = useState("");
   const [value, setValue] = useState<number[]>([20, 37]);
+  const [min, setMin] = useState(100);
+  const [max, setMax] = useState(0);
 
   const [eventList, setEventList] = useState([]);
 
@@ -81,8 +83,11 @@ const MainPage = () => {
         <div className={styles.priceContainer}>
           Price: From {value[0]} Eur to {value[1]} Eur
           <Slider
-            getAriaLabel={() => "Temperature range"}
+            min={min}
+            max={max}
+            getAriaLabel={() => "Price range"}
             value={value}
+            defaultValue={[min, max]}
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
@@ -99,6 +104,9 @@ const MainPage = () => {
       <div className={styles.list}>
         {eventList.map((event: any) => {
           console.log(event);
+
+          if(event.price < min) setMin(event.price);
+          if(event.price > max) setMax(event.price);
           return (
             <EventCard
               key={event.id}

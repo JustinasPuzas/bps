@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../../../styles/SideItem.module.css";
+import style from "./SideItem.module.css";
 import { useRouter } from 'next/router'
 import Link from "next/link";
 
