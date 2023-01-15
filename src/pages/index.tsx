@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
+import Slider from "@mui/material/Slider";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -35,16 +36,15 @@ const Home: NextPage = () => {
 
 const MainPage = () => {
   const [name, setName] = useState("");
-  const [price1, setPrice1] = useState(0);
-  const [price2, setPrice2] = useState(1000000);
+  const [value, setValue] = useState<number[]>([20, 37]);
 
   const [eventList, setEventList] = useState([]);
 
   const handleOnSearch = async () => {
     const axiosUser = await axios.post("/api/event/filter", {
       search: name,
-      price1: price1,
-      price2: price2,
+      price1: value[0],
+      price2: value[1],
     });
     setEventList(axiosUser.data);
   };
@@ -53,13 +53,13 @@ const MainPage = () => {
     setName(event.target.value);
   };
 
-  const handleOnPrice1Change = (event: any) => {
-    setPrice1(event.target.value);
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
   };
 
-  const handleOnPrice2Change = (event: any) => {
-    setPrice2(event.target.value);
-  };
+  function valuetext(value: number) {
+    return `${value} Eur`;
+  }
 
   useEffect(() => {
     const getEventList = async () => {
@@ -78,20 +78,16 @@ const MainPage = () => {
           label="Search"
           variant="outlined"
         />
-        <TextField
-          onChange={handleOnPrice1Change}
-          id="standard-basic"
-          label="from:"
-          type="number"
-          variant="standard"
-        />
-        <TextField
-          onChange={handleOnPrice2Change}
-          id="standard-basic"
-          label="to:"
-          type="number"
-          variant="standard"
-        />
+        <div className={styles.priceContainer}>
+          Price: From {value[0]} Eur to {value[1]} Eur
+          <Slider
+            getAriaLabel={() => "Temperature range"}
+            value={value}
+            onChange={handleChange}
+            valueLabelDisplay="auto"
+            getAriaValueText={valuetext}
+          />
+        </div>
         <Button
           onClick={handleOnSearch}
           variant="outlined"
@@ -124,12 +120,13 @@ const DiscoverBar = () => {
   useEffect(() => {
     const getEventList = async () => {
       const axiosEvents = await axios.get("/api/event");
-      const newArr:any[] = [...axiosEvents.data].sort(function () {
+      const newArr: any[] = [...axiosEvents.data].sort(function () {
         return Math.random() - 0.5;
-      })
+      });
       setEvents([
         newArr[0],
         newArr[newArr.length - 1],
+        newArr[Math.floor(newArr.length / 2)],
       ]);
     };
     getEventList();

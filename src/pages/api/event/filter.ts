@@ -25,8 +25,8 @@ const handler: RequestHandler = async (req: any, res: any) => {
             { description: { contains: req.body.search } },
         ],
         AND: [
-            {price: {gt: req.body.price1}},
-            {price: {lt: req.body.price2}}
+            {price: {gt: req.body.price1 - 1}},
+            {price: {lt: req.body.price2 + 1}}
         ],
     },
   });

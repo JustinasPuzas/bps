@@ -184,6 +184,7 @@
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.5);
   height: 100%;
+  width: 100%;
   justify-content: center;
   display:none;
   backdrop-filter: blur(5px);
@@ -205,9 +206,26 @@
   visibility: hidden;
 }
 
+.priceContainer {
+  width: 45%;
+}
+
+@media (max-width: 1200px) {
+  .searchBar {
+    flex-direction: column;
+    height: auto;
+  }
+  .priceContainer {
+    width: 90%;
+  }
+}
+
 @media (max-width: 600px) {
   .discoverBar{
     display: none;
+  }
+  .searchBar{
+    width: 90vw;
   }
 }
 
