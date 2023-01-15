@@ -6,8 +6,8 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
+import Button from "@mui/material/Button";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -41,13 +41,11 @@ const MainPage = () => {
   const [eventList, setEventList] = useState([]);
 
   const handleOnSearch = async () => {
-    const axiosUser = await axios.post("/api/event/filter",
-      {
-        search: name,
-        price1: price1,
-        price2: price2,
-      }
-    );
+    const axiosUser = await axios.post("/api/event/filter", {
+      search: name,
+      price1: price1,
+      price2: price2,
+    });
     setEventList(axiosUser.data);
   };
 
@@ -74,10 +72,33 @@ const MainPage = () => {
   return (
     <div className={styles.mainPage}>
       <div className={styles.searchBar}>
-        <TextField onChange={handleOnNameChange} id="outlined-basic" label="Search" variant="outlined" />
-        <TextField onChange={handleOnPrice1Change} id="standard-basic" label="from:" type="number" variant="standard" />
-        <TextField onChange={handleOnPrice2Change} id="standard-basic" label="to:" type="number" variant="standard" />
-        <Button onClick={handleOnSearch} variant="outlined" endIcon={<SearchIcon />} >Search</Button>
+        <TextField
+          onChange={handleOnNameChange}
+          id="outlined-basic"
+          label="Search"
+          variant="outlined"
+        />
+        <TextField
+          onChange={handleOnPrice1Change}
+          id="standard-basic"
+          label="from:"
+          type="number"
+          variant="standard"
+        />
+        <TextField
+          onChange={handleOnPrice2Change}
+          id="standard-basic"
+          label="to:"
+          type="number"
+          variant="standard"
+        />
+        <Button
+          onClick={handleOnSearch}
+          variant="outlined"
+          endIcon={<SearchIcon />}
+        >
+          Search
+        </Button>
       </div>
       <div className={styles.list}>
         {eventList.map((event: any) => {
@@ -103,16 +124,20 @@ const DiscoverBar = () => {
   useEffect(() => {
     const getEventList = async () => {
       const axiosEvents = await axios.get("/api/event");
-      setEvents([axiosEvents.data[0] as any[], axiosEvents.data[axiosEvents.data.length - 1] as any]);
+      const newArr:any[] = [...axiosEvents.data].sort(function () {
+        return Math.random() - 0.5;
+      })
+      setEvents([
+        newArr[0],
+        newArr[newArr.length - 1],
+      ]);
     };
     getEventList();
   }, []);
 
-
-
   return (
     <div className={styles.discoverBar}>
-      <h2>Discover</h2>
+      <h2>DISCOVER</h2>
       {events.map((event: any) => {
         return (
           <DiscoverCard
@@ -122,8 +147,7 @@ const DiscoverBar = () => {
             price={event.price}
           />
         );
-      })
-      }
+      })}
     </div>
   );
 };
@@ -145,9 +169,8 @@ const EventCard = ({
 }: EventCardProps) => {
   return (
     <div key={key} className={styles.eventCard}>
-      <img src={image}></img>
+      <img className={styles.image} src={image}></img>
       <h3>{name}</h3>
-      
       <p>{price} Eur</p>
     </div>
   );
@@ -160,11 +183,16 @@ interface DiscoverCardProps {
   price: number;
 }
 
-const DiscoverCard = ({key, image, name, price}: DiscoverCardProps) => {
+const DiscoverCard = ({ key, image, name, price }: DiscoverCardProps) => {
   return (
-    <div className={styles.discoverCard} style={{"backgroundImage": `url(${image})`}}>
-      <h2>{name}</h2>
-      <p>{price} Eur</p>
+    <div
+      className={styles.discoverCard}
+      style={{ backgroundImage: `url(${image})` }}
+    >
+      <div className={styles.discoverText}>
+        <h2>{name}</h2>
+        <p>{price} Eur</p>
+      </div>
     </div>
   );
 };

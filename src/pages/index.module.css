@@ -89,7 +89,8 @@
   justify-content: space-around;
   width: 60vw;
   height: 80px;
-  border-radius: 10px;
+  border-radius: 25px;
+  box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.25);
 }
 
 .discoverBar{
@@ -98,6 +99,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 0;
+  padding-top: 10px;
   gap: 1rem;
   background-color: #2a2a2a;
   color: white;
@@ -106,34 +108,101 @@
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1);
 }
 
+.discoverBar h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  letter-spacing: 3px;
+}
+
 .eventCard {
-  width: 150px;
-  height: 300px;
+  width: 200px;
+  height: 400px;
 }
 
 .eventCard h3 {
+  width: 95%;
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
   margin: 0;
 }
 
+.eventCard img:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
+
 .eventCard img{
-  
-  height: 200px;
-  width: 150px;
+  background: none;
+  height: 300px;
+  width: 95%;
   object-fit: cover;
   border-radius: 0.75rem;
+  
 }
 
 .eventCard p {
+  width: 95%;
   margin: 0;
   text-overflow:ellipsis;
 }
 
 .discoverCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 300px;
+  width: 200px;
+  background-size: cover;
+  position: relative;
+  z-index: 0;
+}
 
-  width: 100%;
+.discoverCard:hover {
+  cursor: pointer;
+}
+
+.discoverCard:hover h2 {
+  visibility: visible;
+}
+.discoverCard:hover p {
+  visibility: visible;
+}
+
+.discoverCard:hover .discoverText {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+}
+
+.discoverText{
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  justify-content: center;
+  display:none;
+  backdrop-filter: blur(5px);
+  box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.25);
+}
+
+.discoverText h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  margin: 0;
+  z-index: 999;
+  visibility: hidden;
+}
+
+.discoverText p {
+  margin: 0;
+  z-index: 999;
+  visibility: hidden;
 }
 
 @media (max-width: 600px) {
