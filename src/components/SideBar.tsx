@@ -1,14 +1,11 @@
 import style from "./Sidebar.module.css";
 import { useState } from "react";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SideItem from "./SideItems/SideItem";
 import { useSession, signIn, signOut } from "next-auth/react";
-import SearchIcon from "@mui/icons-material/Search";
 import EventIcon from "@mui/icons-material/Event";
 import Link from "next/link";
-import { env } from "../../env/server.mjs";
 
 const SideBar = () => {
   const [show, setShow] = useState(false);
