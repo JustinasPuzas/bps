@@ -116,6 +116,7 @@ const MainPage = () => {
           if (event.price > max) setMax(event.price);
           return (
             <EventCard
+              key={event.id}
               id={event.id}
               image={event.image}
               name={event.name}
