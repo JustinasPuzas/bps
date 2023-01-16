@@ -14,8 +14,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
-import PaymentIcon from '@mui/icons-material/Payment';
-import FormControl from '@mui/material/FormControl';
+import PaymentIcon from "@mui/icons-material/Payment";
+import FormControl from "@mui/material/FormControl";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -152,9 +152,12 @@ const DiscoverBar = () => {
     <div className={styles.discoverBar}>
       <h2>DISCOVER</h2>
       {events.map((event: any) => {
+
         return (
           <DiscoverCard
             key={event.id}
+            id={event.id}
+            description={event.description}
             image={event.image}
             name={event.name}
             price={event.price}
@@ -166,20 +169,14 @@ const DiscoverBar = () => {
 };
 
 interface EventCardProps {
-  id: string
+  id: string;
   image: string;
   name: string;
   price: number;
   description: string;
 }
 
-const EventCard = ({
-  id,
-  image,
-  name,
-  price,
-  description,
-}: EventCardProps) => {
+const EventCard = ({ id, image, name, price, description }: EventCardProps) => {
   const [openDetails, setOpenDetails] = useState(false);
 
   const handleClose = () => {
@@ -213,23 +210,47 @@ const EventCard = ({
 };
 
 interface DiscoverCardProps {
-  key: string;
+  id: string
   image: string;
   name: string;
   price: number;
+  description: string;
 }
 
-const DiscoverCard = ({ key, image, name, price }: DiscoverCardProps) => {
+const DiscoverCard = ({
+  id,
+  image,
+  name,
+  description,
+  price,
+}: DiscoverCardProps) => {
+  const [openDetails, setOpenDetails] = useState(false);
+
+  const handleClose = () => {
+    setOpenDetails(false);
+  };
+
   return (
-    <div
-      className={styles.discoverCard}
-      style={{ backgroundImage: `url(${image})` }}
-    >
-      <div className={styles.discoverText}>
-        <h2>{name}</h2>
-        <p>{price} Eur</p>
+    <>
+      <div
+        className={styles.discoverCard}
+        style={{ backgroundImage: `url(${image})` }}
+      >
+        <div onClick={()=> setOpenDetails(true)} className={styles.discoverText}>
+          <h2>{name}</h2>
+          <p>{price} Eur</p>
+        </div>
       </div>
-    </div>
+      <DetailsCard
+        id={id}
+        image={image}
+        name={name}
+        price={price}
+        description={description}
+        handleClose={handleClose}
+        openDetails={openDetails}
+      />
+    </>
   );
 };
 
@@ -259,16 +280,20 @@ const DetailsCard = ({
   };
 
   return (
-    <Dialog           sx={{
-      "& .MuiDialog-paper": {
-        backgroundImage: `url(${image})`,
-        backdropFilter: "blur(10px)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        color: "white",
-      },
-    }} open={openDetails} onClose={handleClose}>
+    <Dialog
+      sx={{
+        "& .MuiDialog-paper": {
+          backgroundImage: `url(${image})`,
+          backdropFilter: "blur(10px)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          color: "white",
+        },
+      }}
+      open={openDetails}
+      onClose={handleClose}
+    >
       <div className={styles.descriptionCard}>
         {!screen ? (
           <DescriptionScreen
@@ -314,17 +339,29 @@ const DescriptionScreen = ({
   return (
     <div className={styles.descriptionBackground}>
       <div>
-      <DialogTitle>{name}</DialogTitle>
-      <DialogContent>
-        <DialogContentText sx={{color: "white"}}>
-          <p>{description}</p>
-          <p>Price: {price} Eur</p>
-        </DialogContentText>
-      </DialogContent>
+        <DialogTitle>{name}</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ color: "white" }}>
+            <p>{description}</p>
+            <p>Price: {price} Eur</p>
+          </DialogContentText>
+        </DialogContent>
       </div>
-      <DialogActions sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
-        <Button color="secondary"  onClick={handleClose}>Close</Button>
-        <Button size="large" startIcon={<PaymentIcon fontSize="large" />} color="secondary" variant="contained" onClick={handleScreen}>Purchase</Button>
+      <DialogActions
+        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
+      >
+        <Button color="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button
+          size="large"
+          startIcon={<PaymentIcon fontSize="large" />}
+          color="secondary"
+          variant="contained"
+          onClick={handleScreen}
+        >
+          Purchase
+        </Button>
       </DialogActions>
     </div>
   );
@@ -354,9 +391,8 @@ const PurchaseScreen = ({
   const [cardExpiration, setCardExpiration] = useState("");
   const [error, setError] = useState("");
 
-
   const handlePurchase = async () => {
-    try{
+    try {
       await axios.put("/api/event/purchase", {
         eventId: id,
         name: cardName,
@@ -364,11 +400,10 @@ const PurchaseScreen = ({
         cardNumber: cardNumber,
         cardCvc: cardCvv,
         cardExpiry: cardExpiration,
-      })
-    }catch (err: any){
+      });
+    } catch (err: any) {
       setError(err.response.data.error);
     }
-    
   };
 
   const handleCardName = (e: any) => {
@@ -405,10 +440,26 @@ const PurchaseScreen = ({
             <TextField onChange={handleCardName} required label="Name" />
             <TextField onChange={handleCardSurname} required label="Surname" />
           </div>
-          <TextField onChange={handleCardNumber} required fullWidth label="Card Number" type="number" />
+          <TextField
+            onChange={handleCardNumber}
+            required
+            fullWidth
+            label="Card Number"
+            type="number"
+          />
           <div className={styles.cardInfo}>
-            <TextField onChange={handleCardCvv} required label="CVV" type="number" />
-            <TextField onChange={handleCardExpiration} required label="Expiration date" type="month" />
+            <TextField
+              onChange={handleCardCvv}
+              required
+              label="CVV"
+              type="number"
+            />
+            <TextField
+              onChange={handleCardExpiration}
+              required
+              label="Expiration date"
+              type="month"
+            />
           </div>
         </div>
       </DialogContent>
