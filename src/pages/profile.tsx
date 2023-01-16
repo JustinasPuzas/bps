@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 const Profile: NextPage = () => {
   const { data: session, status } = useSession();
@@ -153,7 +154,7 @@ const Profile: NextPage = () => {
         <div className={styles.card}>
           <h2>My Tickets</h2>
           {tickets.map((ticket: any) => (
-
+            <Link href={`https://bps-ps.vercel.app/ticket/${ticket.id}`}>
             <div key={ticket.id}>
               <h3>Event: {ticket.name}</h3>
               <p>price: {ticket.price} Eur</p>
@@ -167,6 +168,8 @@ const Profile: NextPage = () => {
               </p>
               <br />
             </div>
+            </Link>
+            
           ))}
         </div>
       </main>
