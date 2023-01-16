@@ -152,7 +152,6 @@ const DiscoverBar = () => {
     <div className={styles.discoverBar}>
       <h2>DISCOVER</h2>
       {events.map((event: any) => {
-
         return (
           <DiscoverCard
             key={event.id}
@@ -210,7 +209,7 @@ const EventCard = ({ id, image, name, price, description }: EventCardProps) => {
 };
 
 interface DiscoverCardProps {
-  id: string
+  id: string;
   image: string;
   name: string;
   price: number;
@@ -236,7 +235,10 @@ const DiscoverCard = ({
         className={styles.discoverCard}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <div onClick={()=> setOpenDetails(true)} className={styles.discoverText}>
+        <div
+          onClick={() => setOpenDetails(true)}
+          className={styles.discoverText}
+        >
           <h2>{name}</h2>
           <p>{price} Eur</p>
         </div>

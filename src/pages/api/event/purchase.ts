@@ -7,29 +7,29 @@ const handler: RequestHandler = async (req: any, res: any) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (req.method !== "PUT") return res.status(405).end();
 
-  if (!req.body.name)
-    return res
-      .status(400)
-      .json({ error: "Please enter name on the card" })
-      .end();
-  if (!req.body.surname)
-    return res
-      .status(400)
-      .json({ error: "Please enter surname on the card" })
-      .end();
-  if (!req.body.cardNumber)
-    return res.status(400).json({ error: "Please enter Card Number" }).end();
-  if (!req.body.cardExpiry)
-    return res.status(400).json({ error: "Please enter expiry date" }).end();
-  if (!req.body.cardCvc)
-    return res.status(400).json({ error: "Please enter cvc" }).end();
+  // if (!req.body.name)
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Please enter name on the card" })
+  //     .end();
+  // if (!req.body.surname)
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Please enter surname on the card" })
+  //     .end();
+  // if (!req.body.cardNumber)
+  //   return res.status(400).json({ error: "Please enter Card Number" }).end();
+  // if (!req.body.cardExpiry)
+  //   return res.status(400).json({ error: "Please enter expiry date" }).end();
+  // if (!req.body.cardCvc)
+  //   return res.status(400).json({ error: "Please enter cvc" }).end();
   if (!req.body.eventId)
     return res.status(500).json({ error: "Server Error" })
-  if (req.body.cardNumber.length !== 16)
-    return res
-      .status(400)
-      .json({ error: "Please enter valid card number" })
-      .end();
+  // if (req.body.cardNumber.length !== 16)
+  //   return res
+  //     .status(400)
+  //     .json({ error: "Please enter valid card number" })
+  //     .end();
 
   const event = await prisma.event.findUnique({
     where: {
