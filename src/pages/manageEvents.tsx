@@ -11,8 +11,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { eventNames } from "process";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const ManageEvents = () => {
+  const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
@@ -20,6 +22,14 @@ const ManageEvents = () => {
   const [eventDescription, setEventDescription] = useState("");
   const [eventEmail, setEventEmail] = useState("");
   const [eventPrice, setEventPrice] = useState("");
+
+  if (status === "loading")
+    return (
+      <main className={styles.main}>
+        <div className={styles.container}> Loading... </div>
+      </main>
+    );
+  if (status === "unauthenticated") signIn();
 
   useEffect(() => {
     const getEvents = async () => {
