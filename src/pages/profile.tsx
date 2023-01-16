@@ -154,8 +154,8 @@ const Profile: NextPage = () => {
         <div className={styles.card}>
           <h2>My Tickets</h2>
           {tickets.map((ticket: any) => (
-            <Link href={`https://bps-ps.vercel.app/ticket/${ticket.id}`}>
-            <div key={ticket.id}>
+            <Link  key={ticket.id}  href={`https://bps-ps.vercel.app/ticket/${ticket.id}`}>
+            <div>
               <h3>Event: {ticket.name}</h3>
               <p>price: {ticket.price} Eur</p>
               <p>
