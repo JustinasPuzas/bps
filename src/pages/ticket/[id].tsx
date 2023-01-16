@@ -41,7 +41,7 @@ const Page: NextPage = () => {
           <p>Price: {ticket.event.price} Eur</p>
           <QRCode
             size={256}
-            style={{ height: "100%", maxWidth: "auto", width: "100%" }}
+            style={{ height: "400px", maxWidth: "auto", width: "400px" }}
             value={`${ticket?.link}`}
             viewBox={`0 0 256 256`}
           />
