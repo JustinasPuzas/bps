@@ -234,6 +234,7 @@ const EventCard = ({
       });
       handleClose();
     } catch (err: any) {
+      console.log(err);
       setError(err.response.data.error);
     }
   };

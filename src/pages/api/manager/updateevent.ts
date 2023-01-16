@@ -16,10 +16,10 @@ const handler: RequestHandler = async (req: any, res:any) => {
   }
     
 
-  if(req.body.email){
-    if(!req.body.email.includes("@")) return res.status(400).json({error: "Email must contain @"}).end();
-    if(!req.body.email.includes(".")) return res.status(400).json({error: "Email must contain ."}).end();
-    data.email = req.body.email;
+  if(req.body.hostedBy){
+    if(!req.body.hostedBy.includes("@")) return res.status(400).json({error: "Email must contain @"}).end();
+    if(!req.body.hostedBy.includes(".")) return res.status(400).json({error: "Email must contain ."}).end();
+    data.hostedBy = req.body.hostedBy;
   }
 
   if(req.body.name){
@@ -48,10 +48,6 @@ const handler: RequestHandler = async (req: any, res:any) => {
   if(req.body.public !== undefined){
     console.log("GOT PUBLIC CHANGE")
     data.public = req.body.public;
-  }
-
-  if(req.body.hostedBy){
-    data.hostedBy = req.body.hostedBy;
   }
 
   if(!data) return res.status(400).json({error: "No data to update"}).end();
