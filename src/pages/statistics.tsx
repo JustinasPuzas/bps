@@ -4,13 +4,10 @@ import Head from "next/head";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import React from "react";
 
 const Profile: NextPage = () => {
   const { data: session, status } = useSession();
-
-  useEffect(() => {
-    
-  }, []);
 
   // Render
   if (status === "loading")
@@ -29,9 +26,7 @@ const Profile: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.cardRow}>
-          Hello
-        </div>
+        <div className={styles.cardRow}></div>
       </main>
     </>
   );
