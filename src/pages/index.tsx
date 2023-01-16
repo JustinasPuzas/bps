@@ -9,6 +9,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import Slider from "@mui/material/Slider";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContentText from "@mui/material/DialogContentText";
+import PaymentIcon from '@mui/icons-material/Payment';
+import FormControl from '@mui/material/FormControl';
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -105,11 +112,11 @@ const MainPage = () => {
         {eventList.map((event: any) => {
           console.log(event);
 
-          if(event.price < min) setMin(event.price);
-          if(event.price > max) setMax(event.price);
+          if (event.price < min) setMin(event.price);
+          if (event.price > max) setMax(event.price);
           return (
             <EventCard
-              key={event.id}
+              id={event.id}
               image={event.image}
               name={event.name}
               price={event.price}
@@ -158,7 +165,7 @@ const DiscoverBar = () => {
 };
 
 interface EventCardProps {
-  key: string;
+  id: string
   image: string;
   name: string;
   price: number;
@@ -166,18 +173,41 @@ interface EventCardProps {
 }
 
 const EventCard = ({
+  id,
   image,
   name,
   price,
   description,
-  key,
 }: EventCardProps) => {
+  const [openDetails, setOpenDetails] = useState(false);
+
+  const handleClose = () => {
+    setOpenDetails(false);
+  };
+
   return (
-    <div key={key} className={styles.eventCard}>
-      <img className={styles.image} src={image}></img>
-      <h3>{name}</h3>
-      <p>{price} Eur</p>
-    </div>
+    <>
+      <div className={styles.eventCard}>
+        <img
+          onClick={() => {
+            setOpenDetails(true);
+          }}
+          className={styles.image}
+          src={image}
+        ></img>
+        <h3>{name}</h3>
+        <p>{price} Eur</p>
+      </div>
+      <DetailsCard
+        id={id}
+        image={image}
+        name={name}
+        price={price}
+        description={description}
+        handleClose={handleClose}
+        openDetails={openDetails}
+      />
+    </>
   );
 };
 
@@ -198,6 +228,194 @@ const DiscoverCard = ({ key, image, name, price }: DiscoverCardProps) => {
         <h2>{name}</h2>
         <p>{price} Eur</p>
       </div>
+    </div>
+  );
+};
+
+interface DetailsCardProps {
+  id: string;
+  image: string;
+  name: string;
+  price: number;
+  description: string;
+  handleClose(): void;
+  openDetails: boolean;
+}
+
+const DetailsCard = ({
+  id,
+  image,
+  name,
+  price,
+  description,
+  handleClose,
+  openDetails,
+}: DetailsCardProps) => {
+  const [screen, setScreen] = useState(false);
+
+  const handleScreen = () => {
+    setScreen(!screen);
+  };
+
+  return (
+    <Dialog           sx={{
+      "& .MuiDialog-paper": {
+        backgroundImage: `url(${image})`,
+        backdropFilter: "blur(10px)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        color: "white",
+      },
+    }} open={openDetails} onClose={handleClose}>
+      <div className={styles.descriptionCard}>
+        {!screen ? (
+          <DescriptionScreen
+            image={image}
+            name={name}
+            price={price}
+            description={description}
+            handleClose={handleClose}
+            handleScreen={handleScreen}
+          />
+        ) : (
+          <PurchaseScreen
+            id={id}
+            image={image}
+            name={name}
+            price={price}
+            handleClose={handleClose}
+            handleScreen={handleScreen}
+          />
+        )}
+      </div>
+    </Dialog>
+  );
+};
+
+interface DescriptionScreenProps {
+  image: string;
+  name: string;
+  price: number;
+  description: string;
+  handleClose(): void;
+  handleScreen(): void;
+}
+
+const DescriptionScreen = ({
+  image,
+  name,
+  price,
+  description,
+  handleClose,
+  handleScreen,
+}: DescriptionScreenProps) => {
+  return (
+    <div className={styles.descriptionBackground}>
+      <div>
+      <DialogTitle>{name}</DialogTitle>
+      <DialogContent>
+        <DialogContentText sx={{color: "white"}}>
+          <p>{description}</p>
+          <p>Price: {price} Eur</p>
+        </DialogContentText>
+      </DialogContent>
+      </div>
+      <DialogActions sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
+        <Button color="secondary"  onClick={handleClose}>Close</Button>
+        <Button size="large" startIcon={<PaymentIcon fontSize="large" />} color="secondary" variant="contained" onClick={handleScreen}>Purchase</Button>
+      </DialogActions>
+    </div>
+  );
+};
+
+interface PurchaseScreenProps {
+  id: string;
+  image: string;
+  name: string;
+  price: number;
+  handleClose(): void;
+  handleScreen(): void;
+}
+
+const PurchaseScreen = ({
+  id,
+  image,
+  name,
+  price,
+  handleClose,
+  handleScreen,
+}: PurchaseScreenProps) => {
+  const [cardName, setCardName] = useState("");
+  const [cardSurname, setCardSurname] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
+  const [cardExpiration, setCardExpiration] = useState("");
+  const [error, setError] = useState("");
+
+
+  const handlePurchase = async () => {
+    try{
+      await axios.put("/api/event/purchase", {
+        eventId: id,
+        name: cardName,
+        surname: cardSurname,
+        cardNumber: cardNumber,
+        cardCvc: cardCvv,
+        cardExpiry: cardExpiration,
+      })
+    }catch (err: any){
+      setError(err.response.data.error);
+    }
+    
+  };
+
+  const handleCardName = (e: any) => {
+    setCardName(e.target.value);
+  };
+
+  const handleCardSurname = (e: any) => {
+    setCardSurname(e.target.value);
+  };
+
+  const handleCardNumber = (e: any) => {
+    setCardNumber(e.target.value);
+  };
+
+  const handleCardCvv = (e: any) => {
+    setCardCvv(e.target.value);
+  };
+
+  const handleCardExpiration = (e: any) => {
+    setCardExpiration(e.target.value);
+  };
+
+  return (
+    <div className={styles.purchaseBackground}>
+      <DialogTitle>Payment</DialogTitle>
+      <DialogContent>
+        <div className={styles.purchaseDetails}>
+          {name}
+          {price}
+          <p className={styles.error}>{error}</p>
+        </div>
+        <div className={styles.cardDetails}>
+          <div className={styles.cardHolderName}>
+            <TextField onChange={handleCardName} required label="Name" />
+            <TextField onChange={handleCardSurname} required label="Surname" />
+          </div>
+          <TextField onChange={handleCardNumber} required fullWidth label="Card Number" type="number" />
+          <div className={styles.cardInfo}>
+            <TextField onChange={handleCardCvv} required label="CVV" type="number" />
+            <TextField onChange={handleCardExpiration} required label="Expiration date" type="month" />
+          </div>
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleScreen}>Back</Button>
+        <Button onClick={handlePurchase}>Buy</Button>
+      </DialogActions>
     </div>
   );
 };

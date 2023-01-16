@@ -6,6 +6,7 @@ import SideItem from "./SideItems/SideItem";
 import { useSession, signIn, signOut } from "next-auth/react";
 import EventIcon from "@mui/icons-material/Event";
 import Link from "next/link";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
 const SideBar = () => {
   const [show, setShow] = useState(false);
@@ -31,7 +32,14 @@ const SideBar = () => {
             <SideItem Icon={TheaterComedyIcon} Name="Home" link="/" />
 
             {session?.user?.admin ? (
-              <SideItem Icon={EventIcon} Name="Events" link="/manageEvents" />
+              <>
+                <SideItem Icon={EventIcon} Name="Events" link="/manageEvents" />
+                <SideItem
+                  Icon={QueryStatsIcon}
+                  Name="Statistics"
+                  link="/statistics"
+                />
+              </>
             ) : null}
             <LoginButton />
           </div>

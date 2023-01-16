@@ -221,6 +221,45 @@
   }
 }
 
+.descriptionBackground {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.757);
+  height: 80vh;
+  width: min(600px, 75vw);
+  padding-bottom: 10px;
+}
+
+.purchaseBackground {
+  color: black;
+  background-color: white;
+  height: min(600px, 80vw);
+  width: min(600px, 75vw);
+}
+
+.error {
+  color: red;
+}
+
+.cardDetails {
+  padding: 20px
+}
+
+.cardHolderName{
+  padding-bottom: 20px; 
+  display: flex;
+  gap: 20px;
+}
+
+.cardInfo{
+  padding-top: 20px; 
+  display: flex;
+  gap: 20px;
+}
+
 @media (max-width: 600px) {
   .discoverBar{
     display: none;

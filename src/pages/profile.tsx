@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useSession, signIn, signOut } from "next-auth/react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Profile: NextPage = () => {
@@ -14,6 +14,16 @@ const Profile: NextPage = () => {
   const [email, setEmail] = useState("");
   const [valid, setValid] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    const getTickets = async () => {
+      const axiosTickets = await axios.get("/api/profile");
+      console.log(axiosTickets.data.tickets);
+      setTickets(axiosTickets.data.tickets);
+    };
+    getTickets();
+  }, []);
 
   const onSave = async () => {
     const axiosUser = await axios.put("/api/profile/update", {
@@ -90,7 +100,7 @@ const Profile: NextPage = () => {
                 disabled={!edit}
                 onChange={onEmailChange}
               />
-              <TextField
+              {/* <TextField
                 id="standard-basic"
                 label="New Password"
                 variant="standard"
@@ -101,8 +111,9 @@ const Profile: NextPage = () => {
                 label="Repeat Password"
                 variant="standard"
                 disabled={!edit}
-              />
+              /> */}
             </form>
+
             <div>
               {edit ? (
                 <>
@@ -127,16 +138,34 @@ const Profile: NextPage = () => {
                   <Button variant="text" onClick={() => setEdit(true)}>
                     Edit
                   </Button>
-                  <Button variant="outlined" color="error" onClick={() => signOut()}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => signOut()}
+                  >
                     SignOut
                   </Button>
                 </>
               )}
             </div>
           </div>
-          <div className={styles.card}>
-            <h3>Tickets</h3>
-          </div>
+        </div>
+        <div className={styles.card}>
+          <h2>My Tickets</h2>
+          {tickets.map((ticket: any) => (
+            <div key={ticket.id}>
+              <h3>Event: {ticket.name}</h3>
+              <p>price: {ticket.price} Eur</p>
+              <p>
+                date bought: {new Date(ticket.createdAt).getFullYear()}/
+                {new Date(ticket.createdAt).getMonth() + 1}/
+                {new Date(ticket.createdAt).getDate()}{" "}
+                {new Date(ticket.createdAt).getHours()}:
+                {new Date(ticket.createdAt).getMinutes()}:
+                {new Date(ticket.createdAt).getSeconds()}
+              </p>
+            </div>
+          ))}
         </div>
       </main>
     </>

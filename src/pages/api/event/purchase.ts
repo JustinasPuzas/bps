@@ -17,8 +17,6 @@ const handler: RequestHandler = async (req: any, res: any) => {
       .status(400)
       .json({ error: "Please enter surname on the card" })
       .end();
-  if (!req.body.email)
-    return res.status(400).json({ error: "Please enter email" }).end();
   if (!req.body.cardNumber)
     return res.status(400).json({ error: "Please enter Card Number" }).end();
   if (!req.body.cardExpiry)
@@ -26,7 +24,7 @@ const handler: RequestHandler = async (req: any, res: any) => {
   if (!req.body.cardCvc)
     return res.status(400).json({ error: "Please enter cvc" }).end();
   if (!req.body.eventId)
-    return res.status(500).json({ error: "Server Error" }).end();
+    return res.status(500).json({ error: "Server Error" })
   if (req.body.cardNumber.length !== 16)
     return res
       .status(400)
@@ -48,6 +46,7 @@ const handler: RequestHandler = async (req: any, res: any) => {
   });
 
   if (session?.user) {
+    console.log(`User ${session.user.email} purchased ${event!.name}`)
     await prisma.user.update({
       where: {
         id: session.user.id,
