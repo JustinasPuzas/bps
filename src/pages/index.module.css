@@ -49,6 +49,9 @@
   .title {
     font-size: 5rem;
   }
+  .main {
+    align-items: center;
+  }
 }
 
 .pinkSpan {
