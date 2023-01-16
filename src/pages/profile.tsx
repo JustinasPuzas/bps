@@ -153,6 +153,7 @@ const Profile: NextPage = () => {
         <div className={styles.card}>
           <h2>My Tickets</h2>
           {tickets.map((ticket: any) => (
+
             <div key={ticket.id}>
               <h3>Event: {ticket.name}</h3>
               <p>price: {ticket.price} Eur</p>
@@ -164,6 +165,7 @@ const Profile: NextPage = () => {
                 {new Date(ticket.createdAt).getMinutes()}:
                 {new Date(ticket.createdAt).getSeconds()}
               </p>
+              <br />
             </div>
           ))}
         </div>
