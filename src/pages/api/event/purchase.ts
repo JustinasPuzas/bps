@@ -9,28 +9,28 @@ const handler: RequestHandler = async (req: any, res: any) => {
   if (req.method !== "PUT") return res.status(405).end();
   if (!session?.user)
     return res.status(401).json({ error: "Please login first" }).end();
-  // if (!req.body.name)
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Please enter name on the card" })
-  //     .end();
-  // if (!req.body.surname)
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Please enter surname on the card" })
-  //     .end();
-  // if (!req.body.cardNumber)
-  //   return res.status(400).json({ error: "Please enter Card Number" }).end();
-  // if (!req.body.cardExpiry)
-  //   return res.status(400).json({ error: "Please enter expiry date" }).end();
-  // if (!req.body.cardCvc)
-  //   return res.status(400).json({ error: "Please enter cvc" }).end();
+  if (!req.body.name)
+    return res
+      .status(400)
+      .json({ error: "Please enter name on the card" })
+      .end();
+  if (!req.body.surname)
+    return res
+      .status(400)
+      .json({ error: "Please enter surname on the card" })
+      .end();
+  if (!req.body.cardNumber)
+    return res.status(400).json({ error: "Please enter Card Number" }).end();
+  if (!req.body.cardExpiry)
+    return res.status(400).json({ error: "Please enter expiry date" }).end();
+  if (!req.body.cardCvc)
+    return res.status(400).json({ error: "Please enter cvc" }).end();
   if (!req.body.eventId) return res.status(500).json({ error: "Server Error" });
-  // if (req.body.cardNumber.length !== 16)
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Please enter valid card number" })
-  //     .end();
+  if (req.body.cardNumber.length !== 16)
+    return res
+      .status(400)
+      .json({ error: "Please enter valid card number" })
+      .end();
 
   const event = await prisma.event.findUnique({
     where: {
@@ -66,12 +66,12 @@ const handler: RequestHandler = async (req: any, res: any) => {
     },
   });
 
-  return res
-    .status(200)
-    .json({
-      ...user.tickets[user.tickets.length - 1],
-      link: `${env.NEXTAUTH_URL}/ticket/${user?.tickets[user.tickets.length - 1]?.id}`,
-    });
+  return res.status(200).json({
+    ...user.tickets[user.tickets.length - 1],
+    link: `${env.NEXTAUTH_URL}/ticket/${
+      user?.tickets[user.tickets.length - 1]?.id
+    }`,
+  });
 };
 
 export default handler;
