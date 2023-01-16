@@ -27,29 +27,19 @@
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
+    width: 70vw;
+    height: 50vh;
   }
   
   .card {
-    min-width: 40vw;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    width: 70vw;
+    height: 50vh;
     padding: 1rem;
     border-radius: 0.75rem;
     color: black;
     background-color: rgba(255, 255, 255, 0.5);
   }
   
-  .card h4 {
-    color:red;
-  }
-  
-  .card form{
-    max-width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
   
   #standard-basic{
     color:white

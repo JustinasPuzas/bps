@@ -36,29 +36,6 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
-    CredentialsProvider({
-      
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text", placeholder: "Enter your email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({
-          where: {
-            email: `${credentials.email}`,
-          },
-        });
-        console.log(user)
-        if (user?.password) {
-          if (user.password == credentials.password) {
-            return user;
-          }
-        }
-        return null;
-      },
-    }),
   ],
 };
 
