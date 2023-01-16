@@ -23,6 +23,14 @@ const ManageEvents = () => {
   const [eventEmail, setEventEmail] = useState("");
   const [eventPrice, setEventPrice] = useState("");
 
+  useEffect(() => {
+    const getEvents = async () => {
+      const axiosEvents = await axios.get("/api/event");
+      setEvents(axiosEvents.data);
+    };
+    getEvents();
+  }, [open, status]);
+
   if (status === "loading")
     return (
       <main className={styles.main}>
@@ -30,14 +38,6 @@ const ManageEvents = () => {
       </main>
     );
   if (status === "unauthenticated") signIn();
-
-  useEffect(() => {
-    const getEvents = async () => {
-      const axiosEvents = await axios.get("/api/event");
-      setEvents(axiosEvents.data);
-    };
-    getEvents();
-  }, [open]);
 
   const onNameChange = (a: any) => {
     setEventName(a.target.value);
