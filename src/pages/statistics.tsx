@@ -33,13 +33,11 @@ const Page: NextPage = () => {
   useEffect(() => {
     const getEvents = async () => {
       const axiosEvents = await axios.get("/api/manager/events");
-      console.log(axiosEvents.data);
       setEvents(axiosEvents.data);
     };
 
     const getTickets = async () => {
       const axiosTickets = await axios.get("/api/event/tickets");
-      console.log(axiosTickets.data);
       setTickets(axiosTickets.data);
     };
     getEvents();

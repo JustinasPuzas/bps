@@ -10,19 +10,17 @@ const handler: RequestHandler = async (req: any, res: any) => {
   if (!session.user?.admin) return res.status(403).end();
 
   if (!req.body.name)
-    return res.status(400).json({ error: "Event must have a Name" }).end();
+    return res.status(400).json({ error: "Event must have a Name" });
   if (!req.body.hostedBy)
     return res
       .status(400)
       .json({ error: "Event must have Contact Email" })
-      .end();
   if (!req.body.description)
     return res
       .status(400)
       .json({ error: "Event must have a Description" })
-      .end();
   if (!Number.parseInt(req.body.price))
-    return res.status(400).json({ error: "Event must have a Price" }).end();
+    return res.status(400).json({ error: "Event must have a Price" });
   req.body.price = Number.parseInt(req.body.price);
 
   const event = await prisma.event.create({

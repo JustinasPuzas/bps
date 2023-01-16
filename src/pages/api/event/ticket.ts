@@ -35,7 +35,7 @@ const handler: RequestHandler = async (req: any, res: any) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).end();
+    return res.status(500);
   }
 };
 

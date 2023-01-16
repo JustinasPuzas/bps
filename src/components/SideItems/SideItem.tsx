@@ -16,7 +16,6 @@ function SideItem({ Icon , Name, link , close, onClick  }: Props) {
   const router = useRouter()
 
   const buttonHandler = () => {
-    console.log(router.pathname)
     const isActive = router.pathname === link;
     return {
       background: isActive ? "var(--five-color)" : "",

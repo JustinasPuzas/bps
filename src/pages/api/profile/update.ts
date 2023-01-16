@@ -5,8 +5,8 @@ import { unstable_getServerSession } from "next-auth/next";
 
 const handler: RequestHandler = async (req: any, res:any) => {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (req.method !== "PUT") return res.status(405).json({kek: "lol"}).end();
-  if (!session) return res.status(401).json({kek: "lol"}).end();
+  if (req.method !== "PUT") return res.status(405).json({kek: "lol"})
+  if (!session) return res.status(401).json({kek: "lol"})
 
   let updatedUser;
   if (req.body.email) {

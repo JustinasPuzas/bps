@@ -6,7 +6,7 @@ import { unstable_getServerSession } from "next-auth/next";
 const handler: RequestHandler = async (req: any, res:any) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (req.method !== "PUT") return res.status(405).end();
-  if (!session) return res.status(401).end();
+  if (!session) return res.status(401).end;
   if (!session.user?.admin) return res.status(403).end();
 
   const data: any = {};
@@ -17,13 +17,13 @@ const handler: RequestHandler = async (req: any, res:any) => {
     
 
   if(req.body.hostedBy){
-    if(!req.body.hostedBy.includes("@")) return res.status(400).json({error: "Email must contain @"}).end();
-    if(!req.body.hostedBy.includes(".")) return res.status(400).json({error: "Email must contain ."}).end();
+    if(!req.body.hostedBy.includes("@")) return res.status(400).json({error: "Email must contain @"});
+    if(!req.body.hostedBy.includes(".")) return res.status(400).json({error: "Email must contain ."});
     data.hostedBy = req.body.hostedBy;
   }
 
   if(req.body.name){
-    if(req.body.name.length < 3) return res.status(400).json({error: "Name must be at least 3 characters long"}).end()
+    if(req.body.name.length < 3) return res.status(400).json({error: "Name must be at least 3 characters long"})
     data.name = req.body.name;
   }
 
@@ -32,12 +32,12 @@ const handler: RequestHandler = async (req: any, res:any) => {
   }
 
   if(req.body.price){
-    if(!Number.parseInt(req.body.price)) return res.status(400).json({error: "Price must be a number"}).end();
+    if(!Number.parseInt(req.body.price)) return res.status(400).json({error: "Price must be a number"});
     data.price = Number.parseInt(req.body.price);
   }
 
   if(req.body.description){
-    if(req.body.description.length < 10) return res.status(400).json({error: "Description must be at least 10 characters long"}).end();
+    if(req.body.description.length < 10) return res.status(400).json({error: "Description must be at least 10 characters long"});
     data.description = req.body.description;
   }
 
@@ -50,7 +50,7 @@ const handler: RequestHandler = async (req: any, res:any) => {
     data.public = req.body.public;
   }
 
-  if(!data) return res.status(400).json({error: "No data to update"}).end();
+  if(!data) return res.status(400).json({error: "No data to update"});
 
 
   const updatedEvent = await prisma.event.update({

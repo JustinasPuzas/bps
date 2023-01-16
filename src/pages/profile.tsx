@@ -20,7 +20,6 @@ const Profile: NextPage = () => {
   useEffect(() => {
     const getTickets = async () => {
       const axiosTickets = await axios.get("/api/profile");
-      console.log(axiosTickets.data.tickets);
       setTickets(axiosTickets.data.tickets);
     };
     getTickets();
@@ -31,7 +30,6 @@ const Profile: NextPage = () => {
       name: userName,
       email: email,
     });
-    console.log(axiosUser);
     setEdit(false);
   };
 

@@ -97,8 +97,6 @@ const ManageEvents = () => {
             </Button>
           </div>
           {events.map((event: any) =>{
-            console.log(event)
-            console.log(event.id)
             return (
             <EventCard
               key={event.id}
@@ -218,9 +216,6 @@ const EventCard = ({
     getEvents();
   }, [open]);
 
-  console.log(key)
-  console.log(id)
-
   const handleEditEvent = async () => {
     try {
       const axiosEvent: any = await axios.put("/api/manager/updateevent", {
@@ -283,7 +278,6 @@ const EventCard = ({
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(key)
   return (
     <>
       <div key={id} className={styles.eventCard}>

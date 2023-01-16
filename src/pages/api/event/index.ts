@@ -5,7 +5,7 @@ import { authOptions } from "../auth/[...nextauth]";
 
 const handler: RequestHandler = async (req: any, res: any) => {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (req.method !== "GET") return res.status(405).end();
+  if (req.method !== "GET") return res.status(405);
 
   if (session?.user?.admin) {
     const privateEvents = await prisma.event.findMany({

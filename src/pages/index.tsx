@@ -19,7 +19,6 @@ import QRCode from "react-qr-code";
 const Home: NextPage = () => {
   const { data: session } = useSession();
 
-  console.log(session);
   return (
     <>
       <Head>
@@ -109,7 +108,6 @@ const MainPage = () => {
       </div>
       <div className={styles.list}>
         {eventList.map((event: any) => {
-          console.log(event);
 
           if (event.price < min) setMin(event.price);
           if (event.price > max) setMax(event.price);
@@ -438,7 +436,6 @@ const PurchaseScreen = ({
         cardCvc: cardCvv,
         cardExpiry: cardExpiration,
       });
-      console.log(res.data)
       setTicket(res.data);
       setScreen(2);
     } catch (err: any) {
@@ -529,7 +526,6 @@ const TicketScreen = ({
   ticket,
   handleClose,
 }: TicketScreenProps) => {
-  console.log("ticket", ticket)
   if(!ticket) return null;
 
   return (
