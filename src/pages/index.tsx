@@ -1,7 +1,6 @@
 import styles from "./index.module.css";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -15,7 +14,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
 import PaymentIcon from "@mui/icons-material/Payment";
-import FormControl from "@mui/material/FormControl";
+import QRCode from "react-qr-code";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -152,7 +151,6 @@ const DiscoverBar = () => {
     <div className={styles.discoverBar}>
       <h2>DISCOVER</h2>
       {events.map((event: any) => {
-
         return (
           <DiscoverCard
             key={event.id}
@@ -210,7 +208,7 @@ const EventCard = ({ id, image, name, price, description }: EventCardProps) => {
 };
 
 interface DiscoverCardProps {
-  id: string
+  id: string;
   image: string;
   name: string;
   price: number;
@@ -236,7 +234,10 @@ const DiscoverCard = ({
         className={styles.discoverCard}
         style={{ backgroundImage: `url(${image})` }}
       >
-        <div onClick={() => setOpenDetails(true)} className={styles.discoverText}>
+        <div
+          onClick={() => setOpenDetails(true)}
+          className={styles.discoverText}
+        >
           <h2>{name}</h2>
           <p>{price} Eur</p>
         </div>
@@ -273,18 +274,61 @@ const DetailsCard = ({
   handleClose,
   openDetails,
 }: DetailsCardProps) => {
-  const [screen, setScreen] = useState(false);
+  const [screen, setScreen] = useState(0);
+  const [ticket, setTicket] = useState({});
 
   const handleScreen = () => {
-    setScreen(!screen);
-
+    setScreen(screen - 1);
   };
 
   useEffect(() => {
     setTimeout(() => {
-      setScreen(false);
-      }, 500);
+      setScreen(0);
+    }, 500);
   }, [openDetails]);
+
+  const PageTurner = () => {
+    if (screen == 0) {
+      return (
+        <DescriptionScreen
+          image={image}
+          name={name}
+          price={price}
+          description={description}
+          handleClose={handleClose}
+          handleScreen={handleScreen}
+          setScreen={setScreen}
+        />
+      );
+    } else if (screen == 1) {
+      return (
+        <PurchaseScreen
+          setTicket={setTicket}
+          id={id}
+          image={image}
+          name={name}
+          price={price}
+          handleClose={handleClose}
+          handleScreen={handleScreen}
+          setScreen={setScreen}
+        />
+      );
+    } else if (screen == 2) {
+      return (
+        <TicketScreen
+          id={id}
+          ticket={ticket}
+          image={image}
+          name={name}
+          price={price}
+          handleClose={handleClose}
+        />
+      );
+    } else {
+      setScreen(0);
+      return <div>error</div>;
+    }
+  };
 
   return (
     <Dialog
@@ -301,27 +345,7 @@ const DetailsCard = ({
       open={openDetails}
       onClose={handleClose}
     >
-      <div className={styles.descriptionCard}>
-        {!screen ? (
-          <DescriptionScreen
-            image={image}
-            name={name}
-            price={price}
-            description={description}
-            handleClose={handleClose}
-            handleScreen={handleScreen}
-          />
-        ) : (
-          <PurchaseScreen
-            id={id}
-            image={image}
-            name={name}
-            price={price}
-            handleClose={handleClose}
-            handleScreen={handleScreen}
-          />
-        )}
-      </div>
+      <div className={styles.descriptionCard}>{PageTurner()}</div>
     </Dialog>
   );
 };
@@ -333,6 +357,7 @@ interface DescriptionScreenProps {
   description: string;
   handleClose(): void;
   handleScreen(): void;
+  setScreen: any;
 }
 
 const DescriptionScreen = ({
@@ -342,6 +367,7 @@ const DescriptionScreen = ({
   description,
   handleClose,
   handleScreen,
+  setScreen,
 }: DescriptionScreenProps) => {
   return (
     <div className={styles.descriptionBackground}>
@@ -365,7 +391,7 @@ const DescriptionScreen = ({
           startIcon={<PaymentIcon fontSize="large" />}
           color="secondary"
           variant="contained"
-          onClick={handleScreen}
+          onClick={() => setScreen(1)}
         >
           Purchase
         </Button>
@@ -381,6 +407,8 @@ interface PurchaseScreenProps {
   price: number;
   handleClose(): void;
   handleScreen(): void;
+  setTicket: any;
+  setScreen: any;
 }
 
 const PurchaseScreen = ({
@@ -390,6 +418,8 @@ const PurchaseScreen = ({
   price,
   handleClose,
   handleScreen,
+  setTicket,
+  setScreen,
 }: PurchaseScreenProps) => {
   const [cardName, setCardName] = useState("");
   const [cardSurname, setCardSurname] = useState("");
@@ -397,10 +427,10 @@ const PurchaseScreen = ({
   const [cardCvv, setCardCvv] = useState("");
   const [cardExpiration, setCardExpiration] = useState("");
   const [error, setError] = useState("");
-
   const handlePurchase = async () => {
     try {
-      await axios.put("/api/event/purchase", {
+      
+      const res = await axios.put("/api/event/purchase", {
         eventId: id,
         name: cardName,
         surname: cardSurname,
@@ -408,6 +438,9 @@ const PurchaseScreen = ({
         cardCvc: cardCvv,
         cardExpiry: cardExpiration,
       });
+      console.log(res.data)
+      setTicket(res.data);
+      setScreen(2);
     } catch (err: any) {
       setError(err.response.data.error);
     }
@@ -438,8 +471,8 @@ const PurchaseScreen = ({
       <DialogTitle>Payment</DialogTitle>
       <DialogContent>
         <div className={styles.purchaseDetails}>
-          {name}
-          {price}
+          <p>Name: {name}</p>
+          <p>Price: {price} Eur</p>
           <p className={styles.error}>{error}</p>
         </div>
         <div className={styles.cardDetails}>
@@ -472,8 +505,52 @@ const PurchaseScreen = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        <Button onClick={handleScreen}>Back</Button>
+        <Button onClick={() => setScreen(0)}>Back</Button>
         <Button onClick={handlePurchase}>Buy</Button>
+      </DialogActions>
+    </div>
+  );
+};
+
+interface TicketScreenProps {
+  id: string;
+  image: string;
+  name: string;
+  price: number;
+  ticket: any;
+  handleClose(): void;
+}
+
+const TicketScreen = ({
+  id,
+  image,
+  name,
+  price,
+  ticket,
+  handleClose,
+}: TicketScreenProps) => {
+  console.log("ticket", ticket)
+  if(!ticket) return null;
+
+  return (
+    <div className={styles.ticketBackground}>
+      <DialogTitle>Ticket</DialogTitle>
+      <DialogContent>
+        <div className={styles.purchaseDetails}>
+          <p>Name: {name}</p>
+          <p>Price: {price} Eur</p>
+        </div>
+        <div className={styles.cardDetails}>
+          <QRCode
+            size={256}
+            style={{ height: "100%", maxWidth: "auto", width: "100%" }}
+            value={`${ticket.link}`}
+            viewBox={`0 0 256 256`}
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
       </DialogActions>
     </div>
   );

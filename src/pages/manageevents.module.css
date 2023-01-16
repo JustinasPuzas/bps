@@ -3,11 +3,11 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 5vw;
+
     height: 100vh;
     background-image: linear-gradient(to bottom, #fff7e8, #ffd884);
     color: white;
-    min-width: calc(100vw);
+    width: 100vw;
     overflow-y:scroll
   }
 
@@ -16,6 +16,7 @@
   }
 
   .eventCard {
+    width: 100%;
     padding: 15px;
     color : black;
     background-color: bisque;

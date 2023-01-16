@@ -241,7 +241,19 @@
   background-color: white;
   height: min(600px, 80vw);
   width: min(600px, 75vw);
+  display: flex;
+  flex-direction: column;
 }
+
+.ticketBackground {
+  color: black;
+  background-color: white;
+  height: min(750px, 80vh);
+  width: min(600px, 80vw);
+  display: flex;
+  flex-direction: column;
+}
+
 
 .error {
   color: red;

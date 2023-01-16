@@ -136,6 +136,7 @@ const ManageEvents = () => {
             <TextField
               autoFocus
               margin="dense"
+              multiline
               id="description"
               label="Description"
               type="text"
@@ -287,8 +288,8 @@ const EventCard = ({
       <div key={id} className={styles.eventCard}>
         <h3>{name}</h3>
         <p>{description}</p>
-        <p>{hostedBy}</p>
-        <p>{price}</p>
+        <p>Contact: {hostedBy}</p>
+        <p>Price: {price} Eur</p>
         <Button onClick={handleClickOpen} >Edit</Button>
         {eventPublic ? <Button onClick={onPublicChange} >Public</Button> : <Button onClick={onPublicChange} >Private</Button>}
       </div>
@@ -315,6 +316,7 @@ const EventCard = ({
             margin="dense"
             id="description"
             label="Description"
+            multiline
             type="text"
             fullWidth
             variant="standard"
