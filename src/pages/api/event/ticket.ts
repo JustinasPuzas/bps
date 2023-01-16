@@ -17,8 +17,13 @@ const handler: RequestHandler = async (req: any, res: any) => {
         id: true,
         name: true,
         price: true,
-        createdAt: true,
-        event: true,
+        event: {
+            select: {
+                name: true,
+                description: true,
+                price: true,
+            }
+        }
       },
       where: {
         id: req.query.id,

@@ -1,7 +1,6 @@
 import styles from "./[id].module.css";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import React from "react";
@@ -10,7 +9,9 @@ import QRCode from "react-qr-code";
 
 const Page: NextPage = () => {
   const router = useRouter();
-  const placeHolder: any = {}
+  const placeHolder = {id: "", name: "", price: "", link: "",
+  event: { name: "", description: "", price: ""}
+}
   const [ticket, setTicket] = useState(placeHolder);
   const { id } = router.query;
   console.log(id)
