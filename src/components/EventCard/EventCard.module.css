@@ -1,0 +1,33 @@
+.eventCard {
+    width: 200px;
+    height: 400px;
+  }
+  
+  .eventCard h3 {
+    width: 95%;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .eventCard img:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .eventCard img{
+    background: none;
+    height: 300px;
+    width: 95%;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    
+  }
+  
+  .eventCard p {
+    width: 95%;
+    margin: 0;
+    text-overflow:ellipsis;
+  }
