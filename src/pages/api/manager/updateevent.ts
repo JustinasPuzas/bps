@@ -50,6 +50,11 @@ const handler: RequestHandler = async (req: any, res:any) => {
     data.public = req.body.public;
   }
 
+  if(req.body.location){
+    if(req.body.location !== "red" && req.body.location !== "blue" && req.body.location !== "yellow") return res.status(400).json({error: "Location must be red, blue, or yellow"});
+    data.location = req.body.location;
+  }
+
   if(!data) return res.status(400).json({error: "No data to update"});
 
 
