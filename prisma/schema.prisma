@@ -46,7 +46,7 @@ model Event {
     price     Int
     name      String
     date      DateTime?
-    location  String?  @default("Null")
+    location  HallType
     image     String?  @default("https://blog.berlin.bard.edu/wp-content/uploads/2014/04/Cover-photo-no-caption-needed.jpg")
     hostedBy  String
     description String? @default("")
@@ -99,6 +99,12 @@ model Expenses {
 enum ExpensesType {
     income
     expense
+}
+
+enum HallType {
+    red 
+    blue
+    yellow
 }
 
 model VerificationToken {

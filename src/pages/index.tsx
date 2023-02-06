@@ -25,7 +25,7 @@ const Home: NextPage = (props) => {
           B<span className={styles.pinkSpan}>P</span>S
         </h1>
         <div className={styles.container}>
-          <MainPage events={(props as any).events} />
+          <MainPage events={(props as any).events} minValue={(props as any).minValue} maxValue={(props as any).maxValue} />
         </div>
       </main>
       <DiscoverBar events={(props as any).events} />
@@ -35,27 +35,14 @@ const Home: NextPage = (props) => {
 
 interface MainPageProps {
   events: any[];
+  minValue: number;
+  maxValue: number;
 }
-const MainPage = ({ events }: MainPageProps) => {
-  const [name, setName] = useState("");
-  const [value, setValue] = useState<number[]>([20, 37]);
-  const [min, setMin] = useState(100);
-  const [max, setMax] = useState(0);
-  const [eventList, setEventList] = useState(events);
 
-  useEffect(() => {
-    let hiPrice = 0;
-    let lowPrice = 99999;
-    console.log(events)
-    events.map((event) => {
-      console.log("Mapping Events")
-      if (event.price < lowPrice) lowPrice = event.price;
-      if (event.price > hiPrice) hiPrice = event.price;
-    });
-    setMin(lowPrice);
-    setMax(hiPrice);
-    setValue([lowPrice, hiPrice]);
-  }, []);
+const MainPage = ({ events, minValue, maxValue }: MainPageProps) => {
+  const [name, setName] = useState("");
+  const [value, setValue] = useState<number[]>([minValue, maxValue]);
+  const [eventList, setEventList] = useState(events);
 
   const handleOnSearch = async () => {
     const axiosUser = await axios.post("/api/event/filter", {
@@ -90,8 +77,8 @@ const MainPage = ({ events }: MainPageProps) => {
         <div className={styles.priceContainer}>
           Price: From {value[0]} Eur to {value[1]} Eur
           <Slider
-            min={min}
-            max={max}
+            min={minValue}
+            max={maxValue}
             getAriaLabel={() => "Price range"}
             value={value}
             defaultValue={value}
@@ -127,7 +114,7 @@ const MainPage = ({ events }: MainPageProps) => {
 };
 
 // server side rendering
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps() {
   const events = await prisma.event.findMany({
     select: {
       id: true,
@@ -145,9 +132,31 @@ export async function getServerSideProps(context: any) {
     },
   });
 
+  const maxValue = await prisma.event.findMany({
+    select: {
+      price: true,
+    },
+    orderBy: {
+      price: "desc",
+    },
+    take: 1,
+  });
+
+  const minValue = await prisma.event.findMany({
+    select: {
+      price: true,
+    },
+    orderBy: {
+      price: "asc",
+    },
+    take: 1,
+  });
+
   return {
     props: {
       events,
+      maxValue: maxValue[0]?.price,
+      minValue: minValue[0]?.price,
     },
   };
 }

@@ -12,24 +12,66 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { eventNames } from "process";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { prisma } from "../server/db";
 
-const ManageEvents = () => {
+export async function getServerSideProps() {
+  const initialEvents = await prisma.event.findMany({
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      hostedBy: true,
+      image: true,
+      price: true,
+      public: true,
+      location: true,
+      Tickets:{
+        select: {
+          id: true
+        }
+      }
+    },
+  });
+
+  return {
+    props: {
+      initialEvents,
+    },
+  };
+}
+
+interface ManageEventsProps {
+  initialEvents: {
+    id: string;
+    name: true;
+    description: string;
+    hostedBy: string;
+    image: string;
+    price: number;
+    public: boolean;
+    location: true;
+    Tickets: any[]
+  }[];
+}
+
+const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(initialEvents);
   const [error, setError] = useState("");
   const [eventName, setEventName] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventEmail, setEventEmail] = useState("");
   const [eventPrice, setEventPrice] = useState("");
-
-  useEffect(() => {
-    const getEvents = async () => {
-      const axiosEvents = await axios.get("/api/event");
-      setEvents(axiosEvents.data);
-    };
-    getEvents();
-  }, [open, status]);
+  console.log(initialEvents)
+  // useEffect(() => {
+  //   console.log("Loading open status")
+  //   const getEvents = async () => {
+  //     const axiosEvents = await axios.get("/api/event");
+  //     setEvents(axiosEvents.data);
+  //   };
+  //   getEvents();
+  // }, [open, status]);
 
   if (status === "loading")
     return (
@@ -65,13 +107,19 @@ const ManageEvents = () => {
 
   const handleAddEvent = async () => {
     try {
-      const axiosEvent: any = await axios.post("/api/manager/addevent", {
+      await axios.post("/api/manager/addevent", {
         name: eventName,
         description: eventDescription,
         hostedBy: eventEmail,
         price: eventPrice,
       });
       handleClose();
+      console.log("Loading open status");
+      const getEvents = async () => {
+        const axiosEvents = await axios.get("/api/event");
+        setEvents(axiosEvents.data);
+      };
+      getEvents();
     } catch (err: any) {
       setError(err.response.data.error);
     }
@@ -96,22 +144,23 @@ const ManageEvents = () => {
               Add Event
             </Button>
           </div>
-          {events.map((event: any) =>{
+          {events.map((event: any) => {
             return (
-            <EventCard
-              key={event.id}
-              id={event.id}
-              name={event.name}
-              description={event.description}
-              price={event.price}
-              location={event.location}
-              hostedBy={event.hostedBy}
-              image={event.image}
-              pub={event.public}
-              setEvents={setEvents}
-            />
-          )})}
-          
+              <EventCard
+                key={event.id}
+                id={event.id}
+                name={event.name}
+                description={event.description}
+                price={event.price}
+                location={event.location}
+                hostedBy={event.hostedBy}
+                image={event.image}
+                pub={event.public}
+                Tickets={event.Tickets}
+                setEvents={setEvents}
+              />
+            );
+          })}
         </div>
 
         <Dialog open={open} onClose={handleClose}>
@@ -183,6 +232,7 @@ interface EventCardProps {
   hostedBy: string;
   image: string;
   pub: boolean;
+  Tickets: any[];
   setEvents: any;
 }
 
@@ -196,7 +246,8 @@ const EventCard = ({
   hostedBy,
   image,
   pub,
-  setEvents
+  Tickets,
+  setEvents,
 }: EventCardProps) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -218,7 +269,7 @@ const EventCard = ({
 
   const handleEditEvent = async () => {
     try {
-      const axiosEvent: any = await axios.put("/api/manager/updateevent", {
+      await axios.put("/api/manager/updateevent", {
         id: id,
         name: eventName,
         description: eventDescription,
@@ -260,7 +311,7 @@ const EventCard = ({
 
   const onPublicChange = async (a: any) => {
     try {
-      const axiosEvent: any = await axios.put("/api/manager/updateevent", {
+      await axios.put("/api/manager/updateevent", {
         id: id,
         public: !eventPublic,
       });
@@ -278,6 +329,7 @@ const EventCard = ({
   const handleClose = () => {
     setOpen(false);
   };
+// TODO: ADD SOLD AND FULL SPACE FOR EVENT
   return (
     <>
       <div key={id} className={styles.eventCard}>
@@ -285,8 +337,13 @@ const EventCard = ({
         <p>{description}</p>
         <p>Contact: {hostedBy}</p>
         <p>Price: {price} Eur</p>
-        <Button onClick={handleClickOpen} >Edit</Button>
-        {eventPublic ? <Button onClick={onPublicChange} >Public</Button> : <Button onClick={onPublicChange} >Private</Button>}
+        <p>Sold:{Tickets?.length}</p>
+        <Button onClick={handleClickOpen}>Edit</Button>
+        {eventPublic ? (
+          <Button onClick={onPublicChange}>Public</Button>
+        ) : (
+          <Button onClick={onPublicChange}>Private</Button>
+        )}
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Event</DialogTitle>

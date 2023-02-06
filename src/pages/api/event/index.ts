@@ -19,30 +19,18 @@ const handler: RequestHandler = async (req: any, res: any) => {
         price: true,
         public: true,
         location: true,
+        Tickets: {
+          select: {
+            id: true,
+          }
+        }
       },
     });
 
     return res.status(200).json(privateEvents);
   }
 
-  const events = await prisma.event.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      hostedBy: true,
-      image: true,
-      date: true,
-      price: true,
-      public: true,
-      location: true,
-    },
-    where: {
-      public: true,
-    },
-  });
-
-  return res.status(200).json(events);
+  return res.status(400).json({ error: "You are not authorized" })
 };
 
 export default handler;
