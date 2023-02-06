@@ -2,7 +2,7 @@ import styles from "./index.module.css";
 import { type NextPage } from "next";
 import Head from "next/head";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
@@ -25,7 +25,7 @@ const Home: NextPage = (props) => {
           B<span className={styles.pinkSpan}>P</span>S
         </h1>
         <div className={styles.container}>
-          <MainPage events={(props as any).events}/>
+          <MainPage events={(props as any).events} />
         </div>
       </main>
       <DiscoverBar events={(props as any).events} />
@@ -36,12 +36,26 @@ const Home: NextPage = (props) => {
 interface MainPageProps {
   events: any[];
 }
-const MainPage = ({events}: MainPageProps) => {
+const MainPage = ({ events }: MainPageProps) => {
   const [name, setName] = useState("");
   const [value, setValue] = useState<number[]>([20, 37]);
   const [min, setMin] = useState(100);
   const [max, setMax] = useState(0);
   const [eventList, setEventList] = useState(events);
+
+  useEffect(() => {
+    let hiPrice = 0;
+    let lowPrice = 99999;
+    console.log(events)
+    events.map((event) => {
+      console.log("Mapping Events")
+      if (event.price < lowPrice) lowPrice = event.price;
+      if (event.price > hiPrice) hiPrice = event.price;
+    });
+    setMin(lowPrice);
+    setMax(hiPrice);
+    setValue([lowPrice, hiPrice]);
+  }, []);
 
   const handleOnSearch = async () => {
     const axiosUser = await axios.post("/api/event/filter", {
@@ -80,7 +94,7 @@ const MainPage = ({events}: MainPageProps) => {
             max={max}
             getAriaLabel={() => "Price range"}
             value={value}
-            defaultValue={[min, max]}
+            defaultValue={value}
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
@@ -96,9 +110,6 @@ const MainPage = ({events}: MainPageProps) => {
       </div>
       <div className={styles.list}>
         {eventList.map((event: any) => {
-
-          if (event.price < min) setMin(event.price);
-          if (event.price > max) setMax(event.price);
           return (
             <EventCard
               key={event.id}
@@ -117,7 +128,6 @@ const MainPage = ({events}: MainPageProps) => {
 
 // server side rendering
 export async function getServerSideProps(context: any) {
-
   const events = await prisma.event.findMany({
     select: {
       id: true,
@@ -132,14 +142,14 @@ export async function getServerSideProps(context: any) {
     },
     where: {
       public: true,
-    }
+    },
   });
 
   return {
     props: {
       events,
     },
-  }
+  };
 }
 
 export default Home;
