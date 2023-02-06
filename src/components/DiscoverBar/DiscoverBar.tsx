@@ -2,24 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./DiscoverBar.module.css";
 import DetailsCard from "../DetailsCard/DetailsCard";
+import { getStaticProps } from "../../pages";
 
-const DiscoverBar = () => {
-  const [events, setEvents] = useState([] as any[]);
+interface DiscoverBarProps {
+    events: any[]
+}
 
-  useEffect(() => {
-    const getEventList = async () => {
-      const axiosEvents = await axios.get("/api/event");
-      const newArr: any[] = [...axiosEvents.data].sort(function () {
-        return Math.random() - 0.5;
-      });
-      setEvents([
-        newArr[0],
-        newArr[newArr.length - 1],
-        newArr[Math.floor(newArr.length / 2)],
-      ]);
-    };
-    getEventList();
-  }, []);
+const DiscoverBar = ({events}: DiscoverBarProps) => {
 
   return (
     <div className={styles.discoverBar}>
