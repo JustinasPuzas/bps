@@ -10,6 +10,10 @@
     font-weight: 700;
     margin: 0;
   }
+
+  .eventCard img::before{
+    background-image: url("https://blog.berlin.bard.edu/wp-content/uploads/2014/04/Cover-photo-no-caption-needed.jpg");
+  }
   
   .eventCard img:hover {
     cursor: pointer;

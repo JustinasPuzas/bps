@@ -13,7 +13,6 @@ import EventCard from "../components/EventCard/EventCard";
 import { prisma } from "../server/db";
 
 const Home: NextPage = (props) => {
-
   return (
     <>
       <Head>
@@ -29,7 +28,7 @@ const Home: NextPage = (props) => {
           <MainPage events={(props as any).events}/>
         </div>
       </main>
-      <DiscoverBar events={(props as any ).randomEvents} />
+      <DiscoverBar events={(props as any).events} />
     </>
   );
 };
@@ -117,7 +116,7 @@ const MainPage = ({events}: MainPageProps) => {
 };
 
 // server side rendering
-export async function getStaticProps(context: any) {
+export async function getServerSideProps(context: any) {
 
   const events = await prisma.event.findMany({
     select: {
@@ -136,20 +135,9 @@ export async function getStaticProps(context: any) {
     }
   });
 
-  const newArr: any[] = [...events].sort(function () {
-    return Math.random() - 0.5;
-  });
-
-  const randomEvents = [
-    newArr[0],
-    newArr[newArr.length - 1],
-    newArr[Math.floor(newArr.length / 2)],
-  ];
-
   return {
     props: {
       events,
-      randomEvents,
     },
   }
 }
