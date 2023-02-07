@@ -46,12 +46,23 @@ model Event {
     price     Int
     name      String
     date      DateTime?
-    location  HallType
+    hallId    String?   @db.ObjectId
     image     String?  @default("https://blog.berlin.bard.edu/wp-content/uploads/2014/04/Cover-photo-no-caption-needed.jpg")
     hostedBy  String
     description String? @default("")
     public    Boolean @default(false)
+    hall      Hall?   @relation(fields: [hallId], references: [id])
     Tickets   Ticket[]
+}
+
+model Hall {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    size      Int      @default(400)
+    rows      Int      @default(20)
+    events    Event[]
 }
 
 model Ticket {
@@ -99,12 +110,6 @@ model Expenses {
 enum ExpensesType {
     income
     expense
-}
-
-enum HallType {
-    red 
-    blue
-    yellow
 }
 
 model VerificationToken {

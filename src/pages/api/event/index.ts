@@ -18,7 +18,6 @@ const handler: RequestHandler = async (req: any, res: any) => {
         date: true,
         price: true,
         public: true,
-        location: true,
         Tickets: {
           select: {
             id: true,

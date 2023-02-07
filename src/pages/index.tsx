@@ -125,7 +125,6 @@ export async function getServerSideProps() {
       date: true,
       price: true,
       public: true,
-      location: true,
     },
     where: {
       public: true,

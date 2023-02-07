@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./SideItem.module.css";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 interface Props {
@@ -11,26 +11,25 @@ interface Props {
   onClick?: () => void;
 }
 
-
-function SideItem({ Icon , Name, link , close, onClick  }: Props) {
-  const router = useRouter()
-
-  const buttonHandler = () => {
-    const isActive = router.pathname === link;
-    return {
-      background: isActive ? "var(--five-color)" : "",
-      color: isActive ? "#fff" : "gray",
-      borderLeft: isActive ? "1px solid var(--second-color)" : "",
-    };
-  };
+function SideItem({ Icon, Name, link, close, onClick }: Props) {
+  const router = useRouter();
+  const [isActive, setIsActive] = useState(router.pathname === link);
 
   return (
     <>
-        <Link href={link} onClick={onClick} style={buttonHandler()} className={close ? `${style.close} ${style.sideitem}` : style.sideitem}>
-          <Icon className={style.icon} />
-          <span>{Name}</span>
-        </Link>
-   
+      <Link
+        href={link}
+        onClick={onClick}
+        style={{
+          background: isActive ? "var(--five-color)" : "",
+          color: isActive ? "#fff" : "gray",
+          borderLeft: isActive ? "1px solid var(--second-color)" : "",
+        }}
+        className={router.pathname === link ? `${style.isActive} ${style.sideitem}` : style.sideitem}
+      >
+        <Icon className={style.icon} />
+        <span>{Name}</span>
+      </Link>
     </>
   );
 }

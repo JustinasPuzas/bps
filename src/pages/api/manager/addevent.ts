@@ -12,18 +12,12 @@ const handler: RequestHandler = async (req: any, res: any) => {
   if (!req.body.name)
     return res.status(400).json({ error: "Event must have a Name" });
   if (!req.body.hostedBy)
-    return res
-      .status(400)
-      .json({ error: "Event must have Contact Email" })
+    return res.status(400).json({ error: "Event must have Contact Email" });
   if (!req.body.description)
-    return res
-      .status(400)
-      .json({ error: "Event must have a Description" })
+    return res.status(400).json({ error: "Event must have a Description" });
   if (!Number.parseInt(req.body.price))
     return res.status(400).json({ error: "Event must have a Price" });
   req.body.price = Number.parseInt(req.body.price);
-  if(!req.body.location || req.body.location !== "red" || req.body.location !== "blue" || req.body.location !== "yellow")
-    return res.status(400).json({ error: "Event must have a Location" });
 
   const event = await prisma.event.create({
     select: {
@@ -39,7 +33,6 @@ const handler: RequestHandler = async (req: any, res: any) => {
       hostedBy: `${req.body.hostedBy}`,
       description: `${req.body.description}`,
       price: req.body.price,
-      location: req.body.location,
     },
   });
 

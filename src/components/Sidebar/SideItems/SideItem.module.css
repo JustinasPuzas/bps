@@ -29,6 +29,12 @@
     border-left: 2px solid var(--second-color);
 }
 
+.isActive {
+    color: #fff;
+    background: var(--five-color);
+    border-left: 2px solid var(--second-color);
+}
+
 @media (max-width:1200px) {
     .sideitem span{
      display: none;

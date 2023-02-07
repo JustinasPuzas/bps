@@ -13,6 +13,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { eventNames } from "process";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { prisma } from "../server/db";
+import EventCard from "../components/EventCard/EventCard";
+import { DiscoverCard } from "../components/DiscoverBar/DiscoverBar";
 
 export async function getServerSideProps() {
   const initialEvents = await prisma.event.findMany({
@@ -24,12 +26,11 @@ export async function getServerSideProps() {
       image: true,
       price: true,
       public: true,
-      location: true,
-      Tickets:{
+      Tickets: {
         select: {
-          id: true
-        }
-      }
+          id: true,
+        },
+      },
     },
   });
 
@@ -50,7 +51,7 @@ interface ManageEventsProps {
     price: number;
     public: boolean;
     location: true;
-    Tickets: any[]
+    Tickets: any[];
   }[];
 }
 
@@ -63,15 +64,6 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
   const [eventDescription, setEventDescription] = useState("");
   const [eventEmail, setEventEmail] = useState("");
   const [eventPrice, setEventPrice] = useState("");
-  console.log(initialEvents)
-  // useEffect(() => {
-  //   console.log("Loading open status")
-  //   const getEvents = async () => {
-  //     const axiosEvents = await axios.get("/api/event");
-  //     setEvents(axiosEvents.data);
-  //   };
-  //   getEvents();
-  // }, [open, status]);
 
   if (status === "loading")
     return (
@@ -105,25 +97,25 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
     setOpen(false);
   };
 
-  const handleAddEvent = async () => {
-    try {
-      await axios.post("/api/manager/addevent", {
-        name: eventName,
-        description: eventDescription,
-        hostedBy: eventEmail,
-        price: eventPrice,
-      });
-      handleClose();
-      console.log("Loading open status");
-      const getEvents = async () => {
-        const axiosEvents = await axios.get("/api/event");
-        setEvents(axiosEvents.data);
-      };
-      getEvents();
-    } catch (err: any) {
-      setError(err.response.data.error);
-    }
-  };
+  // const handleAddEvent = async () => {
+  //   try {
+  //     await axios.post("/api/manager/addevent", {
+  //       name: eventName,
+  //       description: eventDescription,
+  //       hostedBy: eventEmail,
+  //       price: eventPrice,
+  //     });
+  //     handleClose();
+  //     console.log("Loading open status");
+  //     const getEvents = async () => {
+  //       const axiosEvents = await axios.get("/api/event");
+  //       setEvents(axiosEvents.data);
+  //     };
+  //     getEvents();
+  //   } catch (err: any) {
+  //     setError(err.response.data.error);
+  //   }
+  // };
 
   return (
     <>
@@ -146,8 +138,9 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
           </div>
           {events.map((event: any) => {
             return (
-              <EventCard
+              <EventListing
                 key={event.id}
+                type={"edit"}
                 id={event.id}
                 name={event.name}
                 description={event.description}
@@ -162,68 +155,13 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
             );
           })}
         </div>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Add new Event</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To add an event, please enter the following information:
-              <h4 className={styles.error}>{`\n${error}`}</h4>
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Name"
-              type="text"
-              fullWidth
-              variant="standard"
-              onChange={onNameChange}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              multiline
-              id="description"
-              label="Description"
-              type="text"
-              fullWidth
-              variant="standard"
-              onChange={onDescriptionChange}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="email"
-              label="Contact Email"
-              type="email"
-              fullWidth
-              variant="standard"
-              onChange={onEmailChange}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="price"
-              label="Price"
-              type="number"
-              fullWidth
-              variant="standard"
-              onChange={onPriceChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleAddEvent}>Add</Button>
-          </DialogActions>
-        </Dialog>
       </main>
     </>
   );
 };
 
-interface EventCardProps {
-  key: string;
+interface EventListingProps {
+  type: "edit" | "create";
   id: string;
   name: string;
   description: string;
@@ -236,8 +174,8 @@ interface EventCardProps {
   setEvents: any;
 }
 
-const EventCard = ({
-  key,
+const EventListing = ({
+  type,
   id,
   name,
   description,
@@ -248,7 +186,7 @@ const EventCard = ({
   pub,
   Tickets,
   setEvents,
-}: EventCardProps) => {
+}: EventListingProps) => {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [eventName, setEventName] = useState("");
@@ -259,15 +197,7 @@ const EventCard = ({
   const [eventImage, setImage] = useState("");
   const [eventPublic, setPublic] = useState(pub);
 
-  useEffect(() => {
-    const getEvents = async () => {
-      const axiosEvents = await axios.get("/api/event");
-      setEvents(axiosEvents.data);
-    };
-    getEvents();
-  }, [open]);
-
-  const handleEditEvent = async () => {
+  const handleUpdateEvent = async () => {
     try {
       await axios.put("/api/manager/updateevent", {
         id: id,
@@ -278,9 +208,24 @@ const EventCard = ({
         location: eventLocation,
         image: eventImage,
       });
+      const axiosEvents = await axios.get("/api/event");
+        setEvents(axiosEvents.data);
       handleClose();
     } catch (err: any) {
       console.log(err);
+      setError(err.response.data.error);
+    }
+  };
+
+  const onPublicChange = async (a: any) => {
+    try {
+      await axios.put("/api/manager/updateevent", {
+        id: id,
+        public: !eventPublic,
+      });
+      handleClose();
+      setPublic(!eventPublic);
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -309,19 +254,6 @@ const EventCard = ({
     setImage(a.target.value);
   };
 
-  const onPublicChange = async (a: any) => {
-    try {
-      await axios.put("/api/manager/updateevent", {
-        id: id,
-        public: !eventPublic,
-      });
-      handleClose();
-      setPublic(!eventPublic);
-    } catch (err: any) {
-      setError(err.response.data.error);
-    }
-  };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -329,101 +261,145 @@ const EventCard = ({
   const handleClose = () => {
     setOpen(false);
   };
-// TODO: ADD SOLD AND FULL SPACE FOR EVENT
+
   return (
     <>
-      <div key={id} className={styles.eventCard}>
+      <div className={styles.eventCard}>
         <h3>{name}</h3>
         <p>{description}</p>
         <p>Contact: {hostedBy}</p>
         <p>Price: {price} Eur</p>
         <p>Sold:{Tickets?.length}</p>
         <Button onClick={handleClickOpen}>Edit</Button>
-        {eventPublic ? (
-          <Button onClick={onPublicChange}>Public</Button>
-        ) : (
-          <Button onClick={onPublicChange}>Private</Button>
-        )}
+        <Button onClick={onPublicChange}>
+          {eventPublic ? "Public" : "Private"}
+        </Button>
       </div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Event</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To change information, please edit the following information:
-            <h4 className={styles.error}>{`\n${error}`}</h4>
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            placeholder={name}
-            onChange={onNameChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="description"
-            label="Description"
-            multiline
-            type="text"
-            fullWidth
-            variant="standard"
-            placeholder={description}
-            onChange={onDescriptionChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Contact Email"
-            type="email"
-            fullWidth
-            variant="standard"
-            placeholder={hostedBy}
-            onChange={onEmailChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="price"
-            label="Price"
-            type="number"
-            fullWidth
-            variant="standard"
-            placeholder={`${price}`}
-            onChange={onPriceChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="location"
-            label="Location"
-            type="text"
-            fullWidth
-            variant="standard"
-            placeholder={location}
-            onChange={onLocationChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="image"
-            label="Image"
-            type="text"
-            fullWidth
-            variant="standard"
-            placeholder={image}
-            onChange={onImageChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleEditEvent}>Edit</Button>
-        </DialogActions>
+      <Dialog
+        sx={{
+          "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
+            maxWidth: "100%",
+            minWidth: "80vw"
+          },
+        }}
+        open={open}
+        onClose={handleClose}
+      >
+        <div className={styles.dialogContainer}>
+          <DialogTitle>Edit Event</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To change information, please edit the following information:
+              <h4 className={styles.error}>{`\n${error}`}</h4>
+            </DialogContentText>
+            <div className={styles.editContainer}>
+              <div className={styles.editFields}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Name"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  placeholder={name}
+                  onChange={onNameChange}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="description"
+                  label="Description"
+                  multiline
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  placeholder={description}
+
+                  onChange={onDescriptionChange}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="email"
+                  label="Contact Email"
+                  type="email"
+                  fullWidth
+                  variant="standard"
+                  placeholder={hostedBy}
+                  onChange={onEmailChange}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="price"
+                  label="Price"
+                  type="number"
+                  fullWidth
+                  variant="standard"
+                  placeholder={`${price}`}
+                  onChange={onPriceChange}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="location"
+                  label="Location"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  placeholder={location}
+                  onChange={onLocationChange}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="image"
+                  label="Image"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  placeholder={image}
+                  onChange={onImageChange}
+                />
+              </div>
+              <div className={styles.editPreview}>
+                <div className={styles.editPreviewColumn}>
+                  <p>Search Preview:</p>
+                  <EventCard
+                    id={id}
+                    name={eventName ? eventName : name}
+                    description={
+                      eventDescription ? eventDescription : description
+                    }
+                    price={Number.parseFloat(
+                      eventPrice ? eventPrice : `${price}`
+                    )}
+                    image={eventImage ? eventImage : image}
+                  />
+                </div>
+                <div className={styles.editPreviewColumn}>
+                  <p>Discover Preview:</p>
+                  <DiscoverCard
+                    id={id}
+                    name={eventName ? eventName : name}
+                    description={
+                      eventDescription ? eventDescription : description
+                    }
+                    price={Number.parseFloat(
+                      eventPrice ? eventPrice : `${price}`
+                    )}
+                    image={eventImage ? eventImage : image}
+                  />
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleUpdateEvent}>Edit</Button>
+          </DialogActions>
+        </div>
       </Dialog>
     </>
   );

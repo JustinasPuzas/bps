@@ -27,17 +27,38 @@
     margin: 0;
   }
 
-
-  
-  .container {
-    width: 100%;
+  .editContainer {
     display: flex;
     flex-direction: row;
     align-items: space-between;
     justify-content: space-between;
-    scroll-behavior: smooth;
-    gap: 3rem;
-    padding: 4rem 1rem;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .editFields {
+    width: 500px;
+  }
+
+  .editPreview {
+    gap: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 500px;
+  }
+
+  .editPreviewColumn{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editPreview img {
+    width: 200px;
+    height: 300px;
   }
   
   .cardRow {

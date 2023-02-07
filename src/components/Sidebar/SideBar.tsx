@@ -1,4 +1,4 @@
-import style from "./Sidebar.module.css";
+import styles from "./Sidebar.module.css";
 import { useState } from "react";
 import TheaterComedyIcon from "@mui/icons-material/TheaterComedy";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -15,20 +15,20 @@ const SideBar = () => {
     <>
       <div
         className={
-          show ? `${style.sidebar} ${style.side__show}` : style.sidebar
+          show ? `${styles.sidebar} ${styles.side__show}` : styles.sidebar
         }
       >
         {" "}
-        <div className={style.logo}>
+        <div className={styles.logo}>
           <img
             src="https://images.vexels.com/media/users/3/229320/isolated/preview/3dbf158d77c22e31cee5eafbdcf5ce0f-square-gradient-logo.png"
             alt="logo"
           />
           <h3>BPS</h3>
         </div>
-        <div className={style.side_box}>
-          <div className={style.box_one}>
-            <span className={style.heading}>Menu</span>
+        <div className={styles.side_box}>
+          <div className={styles.box_one}>
+            <span className={styles.heading}>Menu</span>
             <SideItem Icon={TheaterComedyIcon} Name="Home" link="/" />
 
             {session?.user?.admin ? (
@@ -46,7 +46,7 @@ const SideBar = () => {
         </div>
       </div>
       <div
-        className={show ? `${style.layer} ${style.layer__show}` : style.layer}
+        className={show ? `${styles.layer} ${styles.layer__show}` : styles.layer}
         onClick={() => setShow(false)}
       ></div>
     </>
@@ -59,11 +59,11 @@ const LoginButton = () => {
   return (
     <>
       {session ? (
-        <Link href="/profile" className={style.sideitem}>
+        <Link href="/profile" className={styles.sideitem}>
           {session?.user?.image ? (
-            <img src={session.user.image} className={style.avatar} />
+            <img src={session.user.image} className={styles.avatar} />
           ) : (
-            <AccountCircleIcon className={style.icon} />
+            <AccountCircleIcon className={styles.icon} />
           )}
 
           {session?.user?.name}

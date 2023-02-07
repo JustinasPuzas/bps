@@ -49,7 +49,7 @@ interface DiscoverCardProps {
   description: string;
 }
 
-const DiscoverCard = ({
+export const DiscoverCard = ({
   id,
   image,
   name,

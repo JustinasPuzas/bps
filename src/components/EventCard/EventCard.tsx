@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import DetailsCard from "../DetailsCard/DetailsCard";
 import styles from "./EventCard.module.css";
-
+import Image from "next/image";
 
 interface EventCardProps {
     id: string;
@@ -21,13 +21,16 @@ interface EventCardProps {
     return (
       <>
         <div className={styles.eventCard}>
-          <img
+          <Image
             onClick={() => {
               setOpenDetails(true);
             }}
             className={styles.image}
             src={image}
-          ></img>
+            alt={name}
+            width={300}
+            height={200}
+          ></Image>
           <h3>{name}</h3>
           <p>{price} Eur</p>
         </div>
