@@ -13,18 +13,12 @@ interface Props {
 
 function SideItem({ Icon, Name, link, close, onClick }: Props) {
   const router = useRouter();
-  const [isActive, setIsActive] = useState(router.pathname === link);
 
   return (
     <>
       <Link
         href={link}
         onClick={onClick}
-        style={{
-          background: isActive ? "var(--five-color)" : "",
-          color: isActive ? "#fff" : "gray",
-          borderLeft: isActive ? "1px solid var(--second-color)" : "",
-        }}
         className={router.pathname === link ? `${style.isActive} ${style.sideitem}` : style.sideitem}
       >
         <Icon className={style.icon} />

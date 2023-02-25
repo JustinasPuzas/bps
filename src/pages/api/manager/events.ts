@@ -25,7 +25,7 @@ const handler: RequestHandler = async (req: any, res: any) => {
     return res.status(200).json(privateEvents);
   }
 
-  return res.status(400);
+  return res.status(401);
 };
 
 export default handler;

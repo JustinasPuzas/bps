@@ -64,6 +64,8 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
   const [eventDescription, setEventDescription] = useState("");
   const [eventEmail, setEventEmail] = useState("");
   const [eventPrice, setEventPrice] = useState("");
+  const [eventLocation, setLocation] = useState("");
+  const [eventImage, setImage] = useState("");
 
   if (status === "loading")
     return (
@@ -96,26 +98,6 @@ const ManageEvents = ({ initialEvents }: ManageEventsProps) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  // const handleAddEvent = async () => {
-  //   try {
-  //     await axios.post("/api/manager/addevent", {
-  //       name: eventName,
-  //       description: eventDescription,
-  //       hostedBy: eventEmail,
-  //       price: eventPrice,
-  //     });
-  //     handleClose();
-  //     console.log("Loading open status");
-  //     const getEvents = async () => {
-  //       const axiosEvents = await axios.get("/api/event");
-  //       setEvents(axiosEvents.data);
-  //     };
-  //     getEvents();
-  //   } catch (err: any) {
-  //     setError(err.response.data.error);
-  //   }
-  // };
 
   return (
     <>
@@ -397,7 +379,7 @@ const EventListing = ({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleUpdateEvent}>Edit</Button>
+            <Button onClick={handleUpdateEvent}>Save</Button>
           </DialogActions>
         </div>
       </Dialog>

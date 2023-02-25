@@ -30,8 +30,8 @@
   .editContainer {
     display: flex;
     flex-direction: row;
-    align-items: space-between;
-    justify-content: space-between;
+    align-items: space-around;
+    justify-content: space-around;
     gap: 1rem;
     padding: 1rem;
     border-radius: 0.75rem;
